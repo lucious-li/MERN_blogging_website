@@ -4,17 +4,26 @@ import "dotenv/config";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
+import cors from "cors";
+import admin from "firebase-admin";
+import serviceAccountKey from "./mern-blog-website-b2604-firebase-adminsdk-28pf8-8442ddc4ea.json" assert { type: "json" };
 
+import { getAuth } from "firebase-admin/auth";
 //schema below
 import User from "./Schema/User.js";
 
 const server = express();
 let PORT = 3000;
 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccountKey),
+});
+
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
 server.use(express.json());
+server.use(cors());
 
 mongoose.connect(process.env.DB_LOCATION, {
   autoIndex: true,
@@ -92,24 +101,93 @@ server.post("/signin", (req, res) => {
       if (!user) {
         return res.status(403).json({ error: "Email not found" });
       }
-      bcrypt.compare(password, user.personal_info.password, (err, result) => {
-        if (err) {
-          return res
-            .status(403)
-            .json({ error: "Error occured while login please try again" });
-        }
-        if (!result) {
-          return res.status(403).json({ error: "incorrect password" });
-        } else {
-          return res.status(200).json(formatDatattoSend(user));
-        }
-      });
+
+      if (!user.google_auth) {
+        bcrypt.compare(password, user.personal_info.password, (err, result) => {
+          if (err) {
+            return res
+              .status(403)
+              .json({ error: "Error occured while login please try again" });
+          }
+          if (!result) {
+            return res.status(403).json({ error: "incorrect password" });
+          } else {
+            return res.status(200).json(formatDatattoSend(user));
+          }
+        });
+      } else {
+        return res.status(403).json({
+          error: "Account was created using google. Try logging in with google",
+        });
+      }
     })
     .catch((err) => {
       console.log(err.message);
       return res.status(500).json({ error: "err.message" });
     });
 });
+
+server.post("/google-auth", async (req, res) => {
+  let { access_token } = req.body;
+  // console.log(access_token);
+  getAuth()
+    .verifyIdToken(access_token)
+    .then(async (decodedUser) => {
+      // console.log(decodedUser);
+      let { email, name, picture } = decodedUser;
+      picture = picture.replace("s96-c", "s384-c");
+      let user = await User.findOne({ "personal_info.email": email })
+        .select(
+          "personal_info.fullname personal_info.username personal_info.profile_img google_auth"
+        )
+        .then((u) => {
+          // console.log(u);
+          return u || null;
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).json({ error: err.message });
+        });
+      if (user) {
+        //login
+        if (!user.google_auth) {
+          return res.status(403).json({
+            error:
+              "This email was signed without google.Please log in with password to access the account",
+          });
+        }
+      } else {
+        //signup
+        let username = await generateUsername(email);
+        user = new User({
+          personal_info: {
+            fullname: name,
+            email,
+            username,
+          },
+          google_auth: true,
+        });
+
+        await user
+          .save()
+          .then((u) => {
+            user = u;
+          })
+          .catch((err) => {
+            return res.status(500).json({ error: err.message });
+          });
+      }
+
+      return res.status(200).json(formatDatattoSend(user));
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        error:
+          "Failed to authenticate you with google. Try with other google account",
+      });
+    });
+});
+
 server.listen(PORT, () => {
   console.log("listening on port ->" + PORT);
 });
