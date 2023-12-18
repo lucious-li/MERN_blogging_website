@@ -1,8 +1,31 @@
-POST http://localhost:3000/signup 
+# POST http://localhost:3000/signup 
+# Content-Type: application/json
+
+# {
+#     "fullname":"lucious",
+#     "email":"1111@gmail.com",
+#     "password":"1111qQ"
+# }
+
+# GET http://localhost:3000/get-upload-url
+
+# POST http://localhost:3000/create-blog 
+# Content-Type: application/json
+# {
+#     "blog-name":"hey"
+# }
+
+
+POST http://localhost:3000/create-blog 
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1N2YxMzZjMWRhZDM0MGJkOWU0MDA3ZCIsImlhdCI6MTcwMjgyNjg2MH0.5VoqPsow7ykA0WCor-PpZwEVtJBkO1tLjKkmSadujpg
 
 {
-    "fullname":"lucious",
-    "email":"111@gmail.com",
-    "password":"1111qQ"
+    "title":"test huiwa @ 2 h2ih # &% &&* 2",
+    "banner":"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1800&h=-1&s=1",
+    "description":"hhhhh",
+    "content":{
+        "blocks":[1,2]
+    },
+    "tags":["11","222"]
 }
