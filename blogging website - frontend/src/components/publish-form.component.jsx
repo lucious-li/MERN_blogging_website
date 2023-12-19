@@ -12,7 +12,7 @@ const PublishForm = () => {
   let tagLimit = 10;
   let {
     blog,
-    blog: { banner, title, tags, description, content },
+    blog: { banner, title, tags, des, content },
     setEditorState,
     setBlog,
   } = useContext(EditorContext);
@@ -29,7 +29,7 @@ const PublishForm = () => {
   };
   const handleBlogDesChange = (e) => {
     let input = e.target;
-    setBlog({ ...blog, description: input.value });
+    setBlog({ ...blog, des: input.value });
   };
   const handleTitleKeydown = (e) => {
     if (e.keyCode == 13) {
@@ -59,7 +59,7 @@ const PublishForm = () => {
       return toast.error("write blog title before publishing");
     }
 
-    if (!description.length || description.length > characterLimit) {
+    if (!des.length || des.length > characterLimit) {
       return toast.error(
         `write a description withing ${characterLimit} characters to publish`
       );
@@ -71,7 +71,7 @@ const PublishForm = () => {
 
     e.target.classList.add("disable");
 
-    let blogObj = { title, banner, description, content, tags, draft: false };
+    let blogObj = { title, banner, des, content, tags, draft: false };
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
         headers: { Authorization: `Bearer ${access_token}` },
@@ -112,7 +112,7 @@ const PublishForm = () => {
             {title}
           </h1>
           <p className="font-gelasio line-clamp-2 text-xl leading-7 mt-4">
-            {description}
+            {des}
           </p>
         </div>
 
@@ -132,14 +132,14 @@ const PublishForm = () => {
 
           <textarea
             maxLength={characterLimit}
-            defaultValue={description}
+            defaultValue={des}
             className="h-40 resize-none leading-7 input-box pl-4"
             onChange={handleBlogDesChange}
             onKeyDown={handleTitleKeydown}
           ></textarea>
 
           <p className="mt-1 text-dark-grey text-sm text-right">
-            {characterLimit - description.length} character left
+            {characterLimit - des.length} character left
           </p>
 
           <p className="text-dark-grey mb-2 mt-9">

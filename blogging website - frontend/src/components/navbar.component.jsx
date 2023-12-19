@@ -31,7 +31,7 @@ const Navbar = () => {
         <div
           className={
             "absolute bg-white w-full top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:p-0 md:w-auto md:show" +
-            (searchBoxVisibility ? "show" : "hidden")
+            (searchBoxVisibility ? " show " : " hidden ")
           }
         >
           <input

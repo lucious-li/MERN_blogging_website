@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 const BlogEditor = () => {
   let {
     blog,
-    blog: { title, banner, content, tags, description },
+    blog: { title, banner, content, tags, des },
     setBlog,
     textEditor,
     setTextEditor,
@@ -119,7 +119,7 @@ const BlogEditor = () => {
         let blogObj = {
           title,
           banner,
-          description,
+          des,
           content,
           tags,
           draft: true,
