@@ -34,9 +34,16 @@
 
 # GET http://localhost:3000/trending-blogs
 
-POST http://localhost:3000/search-blogs
+# POST http://localhost:3000/search-blogs
+# Content-Type: application/json
+
+# {
+#   "tag": "life"
+# }
+
+POST http://localhost:3000/search-users
 Content-Type: application/json
 
 {
-  "tag": "life"
+  "query": "1"
 }

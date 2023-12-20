@@ -1,12 +1,15 @@
 import { useContext, useState } from "react";
 import logo from "../imgs/logo.png";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
 import UserNavigationPanel from "./user-navigation.component";
 
 const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
   const [userNavPanel, setUserNavPanel] = useState(false);
+
+  let navigate = useNavigate();
+
   const {
     userAuth,
     userAuth: { access_token, profile_img },
@@ -16,6 +19,12 @@ const Navbar = () => {
     setUserNavPanel((currentVal) => !currentVal);
   };
 
+  const handleSearch = (e) => {
+    let query = e.target.value;
+    if (e.keyCode == 13 && query.length) {
+      navigate(`/search/${query}`);
+    }
+  };
   const handleBlur = () => {
     setTimeout(() => {
       setUserNavPanel(false);
@@ -38,6 +47,7 @@ const Navbar = () => {
             type="text"
             placeholder="Search"
             className="w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 rounded-full placeholder:text-dark-grey md:pl-12"
+            onKeyDown={handleSearch}
           ></input>
           <i className="fi fi-bs-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-black"></i>
         </div>
@@ -59,7 +69,7 @@ const Navbar = () => {
             <>
               <Link to="/dashhboard/notification">
                 <button className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10">
-                  <i class="fi fi-br-bell text-2xl block mt-1"></i>
+                  <i className="fi fi-br-bell text-2xl block mt-1"></i>
                 </button>
               </Link>
 
