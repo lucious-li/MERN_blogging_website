@@ -41,9 +41,16 @@
 #   "tag": "life"
 # }
 
-POST http://localhost:3000/search-users
+# POST http://localhost:3000/search-users
+# Content-Type: application/json
+
+# {
+#   "query": "1"
+# }
+
+POST http://localhost:3000/get-profile
 Content-Type: application/json
 
 {
-  "query": "1"
+  "username": "111"
 }
