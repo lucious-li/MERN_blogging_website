@@ -34,12 +34,15 @@
 
 # GET http://localhost:3000/trending-blogs
 
-# POST http://localhost:3000/search-blogs
-# Content-Type: application/json
+POST http://localhost:3000/search-blogs
+Content-Type: application/json
 
-# {
-#   "tag": "life"
-# }
+{
+  "tag": "poetry",
+  "limit":2,
+  "eliminate_blog":"Biological-Clock5CU5mySgohLv7p6km7Ppv"
+
+}
 
 # POST http://localhost:3000/search-users
 # Content-Type: application/json
@@ -48,9 +51,18 @@
 #   "query": "1"
 # }
 
-POST http://localhost:3000/get-profile
-Content-Type: application/json
+# POST http://localhost:3000/get-blog
+# Content-Type: application/json
 
-{
-  "username": "111"
-}
+# {
+#   "blog_id": "Solar-Adventure-The-Start-of-A-New-ChapterwmG90HqmpVZlxi8KO5LUr"
+# }
+
+# POST http://localhost:3000/get-profile
+# Content-Type: application/json
+
+# {
+#   "username": "TheOne"
+# }
+
+
