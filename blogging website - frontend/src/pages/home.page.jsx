@@ -17,15 +17,7 @@ const HomePage = () => {
   let [Trendingblogs, setTrendingblogs] = useState(null);
   let [pageState, setpageState] = useState("home");
 
-  let categories = [
-    "tech",
-    "agi",
-    "life",
-    "self improvement",
-    "health",
-    "ai",
-    "love",
-  ];
+  let categories = ["tech", "life", "self improvement", "ai", "love"];
 
   const fetchLatestBlogs = ({ page = 1 }) => {
     axios
