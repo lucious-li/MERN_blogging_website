@@ -1,7 +1,7 @@
 About The Project  
   
 "Express your thoughts uniquely! Whether you want to impart your wisdom, share personal experiences, or stay updated on the latest happenings, showcase your articles in a distinct and intelligent manner."  
-Introducing LeafBolg, a cutting-edge social blogging platform that empowers everyone to voice their perspectives and explore others' opinions on a myriad of topics.   
+Introducing Leaf Blog, a cutting-edge social blogging platform that empowers everyone to voice their perspectives and explore others' opinions on a myriad of topics.   
 It serves as a bridge to connect with individuals and gain insights into the collective mindset.   
   
 Frontend:  
