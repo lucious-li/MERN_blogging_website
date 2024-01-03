@@ -6,10 +6,10 @@ It serves as a bridge to connect with individuals and gain insights into the col
   
 Frontend:  
 React  
-Firebase
+Firebase  
 React Router  
 Axios  
-Flaticon -Icon React  
+Flaticon(Icon) 
 
 Backend:
 Express  
