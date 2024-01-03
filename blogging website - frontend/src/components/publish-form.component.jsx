@@ -45,6 +45,7 @@ const PublishForm = () => {
       if (tags.length < tagLimit) {
         if (!tags.includes(tag) && tag.length) {
           setBlog({ ...blog, tags: [...tags, tag] });
+          e.target.value = "";
         }
       } else {
         toast.error(`you can add max ${tagLimit} tags`);
