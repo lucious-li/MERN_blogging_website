@@ -15,6 +15,7 @@ import User from "./Schema/User.js";
 import Blog from "./Schema/Blog.js";
 import Notification from "./Schema/Notification.js";
 import Comment from "./Schema/Comment.js";
+import nodemailer from "nodemailer";
 
 const server = express();
 let PORT = 3000;
@@ -62,7 +63,9 @@ const verifyJWT = (req, res, next) => {
 
   jwt.verify(token, process.env.SECRET_ACCESS_KEY, (err, user) => {
     if (err) {
-      return res.status(403).json({ error: "Access token is invalid" });
+      return res
+        .status(403)
+        .json({ error: "Access token is invalid, please try again" });
     }
     req.user = user.id;
     next();
@@ -175,8 +178,118 @@ server.post("/signin", (req, res) => {
     })
     .catch((err) => {
       console.log(err.message);
-      return res.status(500).json({ error: "err.message" });
+      return res.status(500).json({ error: err.message });
     });
+});
+
+server.post("/forgot-password", (req, res) => {
+  let { email } = req.body;
+  User.findOne({ "personal_info.email": email })
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(403)
+          .json({ error: "Email not found, please check the email" });
+      }
+      if (user.google_auth) {
+        return res.status(403).json({
+          error: "Account was created using google. Try logging in with google",
+        });
+      }
+
+      var transporter = nodemailer.createTransport({
+        service: "outlook",
+        auth: {
+          user: process.env.OUTLOOK_ACCOUNT,
+          pass: process.env.OUTLOOK_PASSWORD,
+        },
+      });
+
+      const expirationTime = "10m";
+      const token = jwt.sign({ id: user._id }, process.env.SECRET_ACCESS_KEY, {
+        expiresIn: expirationTime,
+      });
+
+      var mailOptions = {
+        from: process.env.OUTLOOK_ACCOUNT,
+        to: email,
+        subject: "LeafBlog Password Reset",
+        text: `Hi ${user.personal_info.username},
+
+    Please click the link below to reset your password, And the link will expire in 10 minutes
+    
+      http://localhost:5173/reset-password/${user._id}/${token}
+    
+    If you didn't make this request, you can safely ignore this email and carry on as usual.`,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          return res.status(500).json({
+            error: err.message,
+          });
+        }
+      });
+      return res.status(200).json({
+        token,
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        error: err.message,
+      });
+    });
+});
+
+server.post("/reset-password", verifyJWT, (req, res) => {
+  let user_id = req.user;
+  let { NewPassword, id } = req.body;
+
+  if (user_id != id) {
+    return res.status(403).json({
+      error:
+        "Some error occured while saving new password , please try again later ",
+    });
+  }
+
+  if (!passwordRegex.test(NewPassword)) {
+    return res.status(403).json({
+      error:
+        "password should to be 6 to 20 characters long with numeric, 1 lowercase and 1 uppercase letters",
+    });
+  }
+  if (id) {
+    User.findOne({ _id: id })
+      .then((user) => {
+        if (user.google_auth) {
+          return res.status(403).json({
+            error:
+              "you can't reset password because you logged in through google",
+          });
+        }
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          error: err.message,
+        });
+      });
+
+    bcrypt.hash(NewPassword, 10, (err, hashed_password) => {
+      User.findOneAndUpdate(
+        { _id: id },
+        { "personal_info.password": hashed_password }
+      )
+        .then(() => {
+          return res.status(200).json({ password: hashed_password });
+        })
+        .catch((err) => {
+          return res.status(500).json({
+            error:
+              "Some error occured while saving new password , please try again later",
+          });
+        });
+    });
+  }
 });
 
 server.post("/google-auth", async (req, res) => {

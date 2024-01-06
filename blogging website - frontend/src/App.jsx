@@ -11,8 +11,8 @@ import ProfilePage from "./pages/profile.page";
 import BlogPage from "./pages/blog.page";
 import SideNav from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password.page";
-import EditProfilePage from "./pages/edit-profile.page";
 import EditProfile from "./pages/edit-profile.page";
+import ResetPassword from "./pages/reset-password";
 
 export const UserContext = createContext({});
 
@@ -39,6 +39,13 @@ const App = () => {
           </Route>
           <Route path="signin" element={<UserAuthForm type="sign-in" />} />;
           <Route path="signup" element={<UserAuthForm type="sign-up" />} />;
+          <Route
+            path="forgot-password"
+            element={<UserAuthForm type="forgot-password" />}
+          />
+          ;
+          <Route path="reset-password/:id/:token" element={<ResetPassword />} />
+          ;
           <Route path="search/:query" element={<Search />} />;
           <Route path="user/:id" element={<ProfilePage />} />;
           <Route path="blogs/:blog_id" element={<BlogPage />} />;

@@ -2,27 +2,37 @@ import { Link, Navigate } from "react-router-dom";
 import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
 import AnimationWrapper from "../common/page-animation";
-// import { useRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
 import { storeInSession } from "../common/session";
 import { useContext } from "react";
 import { UserContext } from "../App";
-import { Routes, Route, Link as Router } from "react-router-dom";
 import { authWithGoogle } from "../common/firebase";
 
 const UserAuthForm = ({ type }) => {
+  let isSubmitDisabled = false;
   let {
     userAuth: { access_token },
     setUserAuth,
   } = useContext(UserContext);
 
   const userAuthThroughServer = (serverRoute, formData) => {
+    let loadingToast;
+
+    if (serverRoute == "/forgot-password") {
+      loadingToast = toast.loading("Sending....");
+    }
+
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
       .then(({ data }) => {
-        storeInSession("user", JSON.stringify(data));
-        setUserAuth(data);
+        if (serverRoute == "/forgot-password") {
+          toast.dismiss(loadingToast);
+          toast.success("sent successfully! ✅");
+        } else {
+          storeInSession("user", JSON.stringify(data));
+          setUserAuth(data);
+        }
       })
       .catch(({ response }) => {
         toast.error(response.data.error);
@@ -31,20 +41,30 @@ const UserAuthForm = ({ type }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    e.target.setAttribute("disabled", true);
 
-    let serverRoute = type == "sign-in" ? "/signin" : "/signup";
+    if (isSubmitDisabled && type == "/forgot-password") {
+      return toast.error("Please wait... You can submit again in 10 seconds");
+    }
+
+    let serverRoute =
+      type == "sign-in"
+        ? "/signin"
+        : type == "sign-up"
+        ? "/signup"
+        : "/forgot-password";
 
     let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
     let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
     //formdata
-    // console.log(authForm.current);
     let form = new FormData(formElment);
     let formData = {};
 
     for (let [key, value] of form.entries()) {
       formData[key] = value;
     }
+    // console.log(formData);
     let { fullname, email, password } = formData;
 
     //form validation
@@ -53,19 +73,25 @@ const UserAuthForm = ({ type }) => {
         return toast.error("Fullname must be at least 3 letters long");
       }
     }
+
     if (!email.length) {
       return toast.error("enter email");
     }
     if (!emailRegex.test(email)) {
       return toast.error("email is invalid");
     }
-    if (!passwordRegex.test(password)) {
-      return toast.error(
-        "password should to be 6 to 20 characters long with numeric, 1 lowercase and 1 uppercase lettes"
-      );
+    if (password) {
+      if (!passwordRegex.test(password)) {
+        return toast.error(
+          "password should to be 6 to 20 characters long with numeric, 1 lowercase and 1 uppercase lettes"
+        );
+      }
     }
-
     userAuthThroughServer(serverRoute, formData);
+
+    setTimeout(() => {
+      e.target.removeAttribute("disabled");
+    }, 10000);
   };
 
   const handleGoogleAuth = (e) => {
@@ -90,14 +116,18 @@ const UserAuthForm = ({ type }) => {
   ) : (
     <>
       <AnimationWrapper keyValue={type}>
-        <section className="h-cover flex items-center justify-center ">
+        <section className="h-cover flex  items-center justify-center ">
           <Toaster />
           <form id="formElment" className="w-[80%] max-w-[400px]">
-            <h1 className="text-4xl font-gelasio capitalize text-center mb-24">
-              {type == "sign-in" ? "Welcome" : "Join us today"}
+            <h1 className="text-4xl font-gelasio capitalize text-center mb-20">
+              {type === "sign-in"
+                ? "Welcome"
+                : type === "sign-up"
+                ? "Join us today"
+                : "Reset password"}
             </h1>
 
-            {type != "sign-in" ? (
+            {type == "sign-up" ? (
               <InputBox
                 name="fullname"
                 type="text"
@@ -114,34 +144,63 @@ const UserAuthForm = ({ type }) => {
               placeholder="Email"
               icon="fi-rr-envelope"
             />
-            <InputBox
-              name="password"
-              type="password"
-              placeholder="Password"
-              icon="fi-rs-key"
-            />
+
+            {type == "forgot-password" ? (
+              ""
+            ) : (
+              <InputBox
+                name="password"
+                type="password"
+                placeholder="Password"
+                icon="fi-rs-key"
+              />
+            )}
+
+            {type == "sign-in" ? (
+              <Link
+                to="/forgot-password"
+                className="hover:underline font-gelasio text-dark-grey text-2xl mt-2 ml-1"
+              >
+                forgot password ?
+              </Link>
+            ) : (
+              ""
+            )}
 
             <button
               className="btn-dark center mt-14"
               type="submit"
               onClick={handleSubmit}
             >
-              {type.replace("-", " ")}
+              {type == "forgot-password" ? "Send" : type.replace("-", " ")}
             </button>
 
-            <div className="relative w-full flex items-center gap-2 my-10 opacity-10 uppercase text-black font-bold">
-              <hr className="w-1/2 border-black" />
-              <p>or</p>
-              <hr className="w-1/2 border-black" />
-            </div>
+            {type != "forgot-password" ? (
+              <>
+                <div className="relative w-full flex items-center gap-2 my-10 opacity-10 uppercase text-black font-bold">
+                  <hr className="w-1/2 border-black" />
+                  <p>or</p>
+                  <hr className="w-1/2 border-black" />
+                </div>
 
-            <button
-              className="btn-dark flex  items-center justify-center gap-4 w-[90%] center"
-              onClick={handleGoogleAuth}
-            >
-              <img src={googleIcon} className="w-5" />
-              continue with Google
-            </button>
+                <button
+                  className="btn-dark flex  items-center justify-center gap-4 w-[90%] center"
+                  onClick={handleGoogleAuth}
+                >
+                  <img src={googleIcon} className="w-5" />
+                  continue with Google
+                </button>
+              </>
+            ) : (
+              <p className="text-center mt-4">
+                <Link
+                  to="/signin"
+                  className="hover:underline text-dark-grey text-xl center mb-20 "
+                >
+                  Back
+                </Link>
+              </p>
+            )}
 
             {type == "sign-in" ? (
               <p className="mt-6 text-dark-grey text-xl text-center">
@@ -153,7 +212,7 @@ const UserAuthForm = ({ type }) => {
                   Join us today
                 </Link>
               </p>
-            ) : (
+            ) : type == "sign-up" ? (
               <p className="mt-6 text-dark-grey text-xl text-center">
                 Already a member ?
                 <Link
@@ -163,6 +222,8 @@ const UserAuthForm = ({ type }) => {
                   Sign in here
                 </Link>
               </p>
+            ) : (
+              ""
             )}
           </form>
         </section>

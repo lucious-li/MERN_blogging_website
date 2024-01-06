@@ -10,7 +10,7 @@ const ChangePassword = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(changePassWordForm.current);
+
     let form = new FormData(changePassWordForm.current);
 
     let formData = {};
