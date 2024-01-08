@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { UserContext } from "../App";
 export let activeTabLineRef;
 export let activeTabRef;
 
@@ -10,6 +11,7 @@ const InPageNavigation = ({
 }) => {
   activeTabLineRef = useRef();
   activeTabRef = useRef();
+  let { darkMode } = useContext(UserContext);
 
   let [inPageNavIndex, setInPageNavIndex] = useState(defaultActiveIndex);
 
@@ -25,17 +27,25 @@ const InPageNavigation = ({
   }, []);
   return (
     <>
-      <div className="relative mb-8 bg-white border-b  border-grey flex flex-nowrap overflow-x-auto ">
+      <div
+        className={`relative mb-8  ${
+          darkMode ? "bg-gray-900" : "bg-white"
+        } border-b  border-grey flex flex-nowrap overflow-x-auto `}
+      >
         {routes.map((route, i) => {
           return (
             <button
               ref={i == defaultActiveIndex ? activeTabRef : null}
               key={i}
-              className={
-                "p-4 px-5 capitalize " +
-                (inPageNavIndex == i ? "text-black" : "text-dark-grey") +
-                (defaultHidden.includes(route) ? " md:hidden " : "")
-              }
+              className={`p-4 px-5 capitalize rounded-2xl  +
+                ${
+                  (inPageNavIndex == i
+                    ? darkMode
+                      ? "bg-black text-white"
+                      : "bg-white"
+                    : "text-dark-grey") +
+                  (defaultHidden.includes(route) ? " md:hidden " : "")
+                }`}
               onClick={(e) => {
                 changePageState(e.target, i);
               }}
@@ -43,7 +53,6 @@ const InPageNavigation = ({
               {route}
             </button>
           );
-          <h1></h1>;
         })}
         <hr
           ref={activeTabLineRef}

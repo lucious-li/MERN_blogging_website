@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "../App";
 
 const InputBox = ({
   name,
@@ -10,6 +11,9 @@ const InputBox = ({
   disable = false,
 }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  let { darkMode } = useContext(UserContext);
+
   return (
     <div className="relative w-[100%] mb-4">
       <input
@@ -21,9 +25,17 @@ const InputBox = ({
         defaultValue={value}
         id={id}
         disabled={disable}
-        className="input-box"
+        className={`input-box ${
+          darkMode ? "bg-black  placeholder:text-white" : "bg-grey"
+        } `}
       />
-      <i className={"fi " + icon + " input-icon"}></i>
+      <i
+        className={`fi ${
+          darkMode
+            ? "filter-invert " + icon + " input-icon"
+            : "" + icon + " input-icon"
+        }`}
+      ></i>
 
       {type == "password" ? (
         <i

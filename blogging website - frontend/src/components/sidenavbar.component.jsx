@@ -5,6 +5,7 @@ import { NavLink, Navigate, Outlet } from "react-router-dom";
 const SideNav = () => {
   let {
     userAuth: { access_token },
+    darkMode,
   } = useContext(UserContext);
 
   let page = location.pathname.split("/")[2];
@@ -40,8 +41,12 @@ const SideNav = () => {
   ) : (
     <>
       <section className="relative flex gap-10 py-0 m-0 max-md:flex-col">
-        <div className="sticky top-[80px] z-30">
-          <div className="md:hidden bg-white py-1 border-b border-grey flex flex-nowrap overflow-x-auto">
+        <div className="sticky top-[80px] z-30 ">
+          <div
+            className={`md:hidden ${
+              darkMode ? "bg-black" : "bg-grey"
+            } py-1  border-grey flex flex-nowrap overflow-x-auto`}
+          >
             <button
               ref={sideBarIconTab}
               className="p-5 capitalize"
@@ -60,24 +65,23 @@ const SideNav = () => {
 
             <hr
               ref={activeTabLine}
-              className="absolute bottom-0 duration-500"
+              className="absolute bottom-0 duration-500 "
             />
           </div>
 
           <div
-            className={
-              "min-w-[200px] h-[calc(100vh-80px-60px)] md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-mdLw-[calc(100%+80px)] max-md:px-16 max-md:-ml-7 duration-500 " +
-              (!showSideNav
+            className={`min-w-[200px] h-[calc(100vh-80px-60px)] md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px]  max-mdLw-[calc(100%+80px)] max-md:px-18 max-md:-ml-7 duration-500 ${
+              !showSideNav
                 ? "max-md:opacity-0 max-md:pointer-events-none"
-                : "opacity-100 pointer-events-auto")
-            }
+                : "opacity-100 pointer-events-auto"
+            } ${darkMode ? "bg-black " : "bg-white"}`}
           >
             <h1 className="text-xl text-dark-grey mb-3">Dashboard</h1>
             <hr className="border-grey -ml-6 mb-8 mr-6"></hr>
 
             <NavLink
               to="/dashboard/blogs"
-              className="sidebar-link"
+              className={`sidebar-link ${darkMode ? "hover:text-white " : ""}`}
               onClick={(e) => setPagestate(e.target.innerText)}
             >
               <i className="fi fi-rr-document"></i>
@@ -86,7 +90,7 @@ const SideNav = () => {
 
             <NavLink
               to="/dashboard/notification"
-              className="sidebar-link"
+              className={`sidebar-link ${darkMode ? "hover:text-white " : ""}`}
               onClick={(e) => setPagestate(e.target.innerText)}
             >
               <i className="fi fi-rs-bell"></i>
@@ -95,7 +99,7 @@ const SideNav = () => {
 
             <NavLink
               to="/editor"
-              className="sidebar-link"
+              className={`sidebar-link ${darkMode ? "hover:text-white " : ""}`}
               onClick={(e) => setPagestate(e.target.innerText)}
             >
               <i className="fi fi-rr-edit"></i>
@@ -107,7 +111,7 @@ const SideNav = () => {
 
             <NavLink
               to="/settings/edit-profile"
-              className="sidebar-link"
+              className={`sidebar-link ${darkMode ? "hover:text-white " : ""}`}
               onClick={(e) => setPagestate(e.target.innerText)}
             >
               <i className="fi fi-rr-user"></i>
@@ -116,7 +120,7 @@ const SideNav = () => {
 
             <NavLink
               to="/settings/change-password"
-              className="sidebar-link"
+              className={`sidebar-link ${darkMode ? "hover:text-white " : ""}`}
               onClick={(e) => setPagestate(e.target.innerText)}
             >
               <i className="fi fi-rr-fingerprint"></i>

@@ -13,11 +13,26 @@ import SideNav from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.page";
 import ResetPassword from "./pages/reset-password";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 
 export const UserContext = createContext({});
 
 const App = () => {
   const [userAuth, setUserAuth] = useState({});
+  const [darkMode, setdarkMode] = useState(false);
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: darkMode ? "dark" : "light",
+      primary: {
+        main: "#90caf9",
+      },
+      secondary: {
+        main: "#131052",
+      },
+    },
+  });
 
   useEffect(() => {
     let userInSession = lookInSession("user");
@@ -27,31 +42,39 @@ const App = () => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ userAuth, setUserAuth }}>
-      <Routes>
-        <Route path="/editor" element={<Editor />} />
-        <Route path="/editor/:blog_id" element={<Editor />} />
-        <Route path="/" element={<Navbar />}>
-          <Route index element={<HomePage />} />
-          <Route path="settings" element={<SideNav />}>
-            <Route path="edit-profile" element={<EditProfile />} />
-            <Route path="change-password" element={<ChangePassword />} />
+    <UserContext.Provider
+      value={{ userAuth, setUserAuth, darkMode, setdarkMode }}
+    >
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Routes>
+          <Route path="/editor" element={<Editor />} />
+          <Route path="/editor/:blog_id" element={<Editor />} />
+          <Route path="/" element={<Navbar />}>
+            <Route index element={<HomePage />} />
+            <Route path="settings" element={<SideNav />}>
+              <Route path="edit-profile" element={<EditProfile />} />
+              <Route path="change-password" element={<ChangePassword />} />
+            </Route>
+            <Route path="signin" element={<UserAuthForm type="sign-in" />} />;
+            <Route path="signup" element={<UserAuthForm type="sign-up" />} />;
+            <Route
+              path="forgot-password"
+              element={<UserAuthForm type="forgot-password" />}
+            />
+            ;
+            <Route
+              path="reset-password/:id/:token"
+              element={<ResetPassword />}
+            />
+            ;
+            <Route path="search/:query" element={<Search />} />;
+            <Route path="user/:id" element={<ProfilePage />} />;
+            <Route path="blogs/:blog_id" element={<BlogPage />} />;
+            <Route path="*" element={<PageNotFound />} />;
           </Route>
-          <Route path="signin" element={<UserAuthForm type="sign-in" />} />;
-          <Route path="signup" element={<UserAuthForm type="sign-up" />} />;
-          <Route
-            path="forgot-password"
-            element={<UserAuthForm type="forgot-password" />}
-          />
-          ;
-          <Route path="reset-password/:id/:token" element={<ResetPassword />} />
-          ;
-          <Route path="search/:query" element={<Search />} />;
-          <Route path="user/:id" element={<ProfilePage />} />;
-          <Route path="blogs/:blog_id" element={<BlogPage />} />;
-          <Route path="*" element={<PageNotFound />} />;
-        </Route>
-      </Routes>
+        </Routes>
+      </ThemeProvider>
     </UserContext.Provider>
   );
 };

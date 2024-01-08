@@ -21,8 +21,8 @@ const BlogEditor = () => {
     setTextEditor,
     setEditorState,
   } = useContext(EditorContext);
-  // console.log(blog);
 
+  let { darkMode } = useContext(UserContext);
   let {
     userAuth: { access_token },
   } = useContext(UserContext);
@@ -155,15 +155,15 @@ const BlogEditor = () => {
 
   return (
     <>
-      <nav className="navbar">
+      <nav className={`navbar ${darkMode ? "bg-black " : "bg-white"}`}>
         <Link to="/" className="flex-none w-10">
-          <img src={logo} />
+          <img src={logo} className={` ${darkMode ? "filter-invert" : ""}`} />
         </Link>
         <p className="max-md:hidden text-black line-clamp-1 w-full">
           {title.length ? title : "New Blog"}
         </p>
         <div className="flex gap-4 ml-auto">
-          <button className="btn-dark py-2" onClick={handlePublishEvent}>
+          <button className="btn-dark py-2 " onClick={handlePublishEvent}>
             Publish
           </button>
           <button onClick={handleSaveDraft} className="btn-light py-2">
@@ -175,9 +175,17 @@ const BlogEditor = () => {
       <AnimationWrapper>
         <section>
           <div className="mx-auto max-w-[900px] w-full">
-            <div className="relative aspect-video hover:opacity-80 bg-white border-4 border-grey">
+            <div
+              className={`relative aspect-video hover:opacity-80 ${
+                darkMode ? "bg-black" : "bg-white"
+              } border-4 border-grey`}
+            >
               <label htmlFor="uplodeBanner">
-                <img src={banner} className="z-20" onError={handleError} />
+                <img
+                  src={banner}
+                  className={`w-full z-20 ${darkMode ? "filter-invert" : ""}`}
+                  onError={handleError}
+                />
                 <input
                   id="uplodeBanner"
                   type="file"
@@ -190,8 +198,10 @@ const BlogEditor = () => {
             <textarea
               defaultValue={title}
               placeholder="Blog Title"
-              className="text-4xl font-medium w-full h-20   mt-10 leading-tight
-              placeholder:opacity-40"
+              className={`text-4xl ${
+                darkMode ? "bg-black text-white" : "bg-white"
+              } font-medium w-full h-20 mt-10 leading-tight
+              placeholder:opacity-40`}
               onKeyDown={handleTitleKeydown}
               onChange={handleTitleChange}
             ></textarea>

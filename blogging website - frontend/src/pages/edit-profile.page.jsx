@@ -15,6 +15,7 @@ const EditProfile = () => {
     userAuth,
     userAuth: { access_token },
     setUserAuth,
+    darkMode,
   } = useContext(UserContext);
   let bioLimit = 150;
   let profileImgEle = useRef();
@@ -249,7 +250,9 @@ const EditProfile = () => {
                 name="bio"
                 maxLength={bioLimit}
                 defaultValue={bio}
-                className="input-box h-64 lg:h-40 resize-none leading-7 mt-5 pl-5"
+                className={`input-box ${
+                  darkMode ? "bg-black  placeholder:text-white" : "bg-grey"
+                } h-64 lg:h-40 resize-none leading-7 mt-5 pl-5`}
                 placeholder="Bio"
                 onChange={handleCharacterChange}
               ></textarea>
@@ -274,8 +277,10 @@ const EditProfile = () => {
                       value={link}
                       placeholder="https://"
                       icon={
-                        "fi " +
-                        (key != "website" ? " fi-brands-" + key : "fi-rr-globe")
+                        "fi" +
+                        (key != "website"
+                          ? " fi-brands-" + key
+                          : " fi-rr-globe")
                       }
                     />
                   );

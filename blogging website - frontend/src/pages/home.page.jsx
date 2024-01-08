@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AnimationWrapper from "../common/page-animation";
 import InPageNavigation, {
   activeTabLineRef,
@@ -11,8 +11,10 @@ import MinimalBlogPost from "../components/nobanner-blog-post.component";
 import NoDataMessage from "../components/nodata.component";
 import { filterPaginationData } from "../common/filter-pagination-data";
 import LoadMoreDataBtn from "../components/load-more.component";
+import { UserContext } from "../App";
 
 const HomePage = () => {
+  const { darkMode } = useContext(UserContext);
   let [blogs, setblogs] = useState(null);
   let [Trendingblogs, setTrendingblogs] = useState(null);
   let [pageState, setpageState] = useState("home");
@@ -156,10 +158,15 @@ const HomePage = () => {
                 {categories.map((category, i) => {
                   return (
                     <button
-                      className={
-                        "tag" +
-                        (pageState == category ? " bg-black text-white " : " ")
-                      }
+                      className={` tag ${
+                        pageState === category
+                          ? darkMode
+                            ? " bg-grey text-black  "
+                            : "bg-black text-white"
+                          : darkMode
+                          ? "bg-black text-white "
+                          : "bg-grey text-black"
+                      }`}
                       onClick={loadBlogByCategory}
                       key={i}
                     >
