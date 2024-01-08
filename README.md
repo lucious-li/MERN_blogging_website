@@ -10,6 +10,7 @@ Firebase
 React Router  
 Axios  
 Flaticon(Icon) 
+material-ui
 
 Backend:
 Express  
@@ -32,6 +33,7 @@ Main Features:
 ✅ Edit profile option to update social links, bio and username  
 ✅ Also user can change login password from settings.  
 ✅ Its mobile responsive with modern design + fade in animation on pages. And much more.  
+✅ dark mode
 
 
 
