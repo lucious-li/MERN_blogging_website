@@ -9,7 +9,7 @@ React
 Firebase  
 React Router  
 Axios  
-Flaticon(Icon) 
+Flaticon(Icon)   
 material-ui
 
 Backend:
