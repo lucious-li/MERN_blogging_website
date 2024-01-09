@@ -24,7 +24,19 @@ const InPageNavigation = ({
 
   useEffect(() => {
     changePageState(activeTabRef.current, defaultActiveIndex);
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        activeTabRef.current.click();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
+
   return (
     <>
       <div

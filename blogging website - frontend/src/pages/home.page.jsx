@@ -28,9 +28,10 @@ const HomePage = () => {
         let formateData = await filterPaginationData({
           state: blogs,
           data: data.blogs,
-          page: 1,
+          page,
           counteRoute: "/all-latest-blogs-count",
         });
+
         setblogs(formateData);
       })
       .catch((err) => {
@@ -109,7 +110,7 @@ const HomePage = () => {
                   return (
                     <AnimationWrapper
                       key={i}
-                      transition={{ duration: 1, delay: i * 0.1 }}
+                      transition={{ duration: 0.1, delay: i * 0.05 }}
                     >
                       <BlogPostCard
                         content={blog}
@@ -135,7 +136,7 @@ const HomePage = () => {
                 return (
                   <AnimationWrapper
                     key={i}
-                    transition={{ duration: 1, delay: i * 0.1 }}
+                    transition={{ duration: 0.5, delay: i * 0.05 }}
                   >
                     <MinimalBlogPost blog={blog} index={i} />
                   </AnimationWrapper>
@@ -189,7 +190,7 @@ const HomePage = () => {
                   return (
                     <AnimationWrapper
                       key={i}
-                      transition={{ duration: 1, delay: i * 0.1 }}
+                      transition={{ duration: 0.5, delay: i * 0.05 }}
                     >
                       <MinimalBlogPost blog={blog} index={i} />
                     </AnimationWrapper>
