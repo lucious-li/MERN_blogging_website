@@ -1,8 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import logo from "../imgs/logo.png";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
 import UserNavigationPanel from "./user-navigation.component";
+import axios from "axios";
+import defaultUserProfileImg from "../imgs/user profile.png";
 
 const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
@@ -12,9 +14,10 @@ const Navbar = () => {
 
   const {
     userAuth,
-    userAuth: { access_token, profile_img },
+    userAuth: { access_token, profile_img, new_notifications_available },
     darkMode,
     setdarkMode,
+    setUserAuth,
   } = useContext(UserContext);
 
   const handleUserNavPanel = () => {
@@ -32,6 +35,27 @@ const Navbar = () => {
       setUserNavPanel(false);
     }, 200);
   };
+
+  const handleImageLoadError = (e) => {
+    e.target.src = defaultUserProfileImg;
+  };
+
+  useEffect(() => {
+    if (access_token) {
+      axios
+        .get(import.meta.env.VITE_SERVER_DOMAIN + "/new-notifications", {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        })
+        .then(({ data }) => {
+          setUserAuth({ ...userAuth, ...data });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [access_token]);
   return (
     <>
       <nav className={`navbar z-50 ${darkMode ? "bg-black" : "bg-white"}`}>
@@ -99,13 +123,22 @@ const Navbar = () => {
 
           {access_token ? (
             <>
-              <Link to="/dashhboard/notification">
+              <Link to="/dashboard/notifications">
                 <button
                   className={`w-12 h-12 rounded-full ${
                     darkMode ? "bg-black " : "bg-grey"
                   } relative hover:bg-black/10`}
                 >
                   <i className="fi fi-br-bell text-2xl block mt-1"></i>
+                  {userAuth ? (
+                    new_notifications_available ? (
+                      <span className="bg-red w-3 h-3 rounded-full absolute z-10 top-2 right-2"></span>
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )}
                 </button>
               </Link>
 
@@ -117,6 +150,7 @@ const Navbar = () => {
                 <button className="w-12 h-12 mt-1">
                   <img
                     src={profile_img}
+                    onError={handleImageLoadError}
                     className="w-full h-full object-cover rounded-full"
                   />
                 </button>

@@ -3,16 +3,19 @@ import { UserContext } from "../App";
 import { NavLink, Navigate, Outlet } from "react-router-dom";
 
 const SideNav = () => {
+  // contexts
   let {
-    userAuth: { access_token },
+    userAuth: { access_token, new_notifications_available },
     darkMode,
   } = useContext(UserContext);
-
+  // page location
   let page = location.pathname.split("/")[2];
 
+  // states
   let [pagestate, setPagestate] = useState(page);
   let [showSideNav, setShowSideNav] = useState(false);
 
+  // references
   let activeTabLine = useRef();
   let sideBarIconTab = useRef();
   let pageStateTab = useRef();
@@ -89,11 +92,18 @@ const SideNav = () => {
             </NavLink>
 
             <NavLink
-              to="/dashboard/notification"
+              to="/dashboard/notifications"
               className={`sidebar-link ${darkMode ? "hover:text-white " : ""}`}
               onClick={(e) => setPagestate(e.target.innerText)}
             >
-              <i className="fi fi-rs-bell"></i>
+              <div className="relative">
+                <i className="fi fi-rs-bell"></i>
+                {new_notifications_available ? (
+                  <span className="bg-red w-2 h-2 rounded-full absolute z-10 top-0 right-0"></span>
+                ) : (
+                  ""
+                )}
+              </div>
               Notification
             </NavLink>
 

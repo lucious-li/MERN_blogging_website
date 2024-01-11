@@ -25,8 +25,8 @@ const Search = () => {
         let formateData = await filterPaginationData({
           state: blogs,
           data: data.blogs,
-          page: 1,
-          counteRoute: "/search-blogs-count",
+          page,
+          countRoute: "/search-blogs-count",
           data_to_send: { query },
           create_new_arr,
         });

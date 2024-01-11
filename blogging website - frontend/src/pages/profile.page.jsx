@@ -75,8 +75,8 @@ const ProfilePage = () => {
         let formateData = await filterPaginationData({
           state: blogs,
           data: data.blogs,
-          page: 1,
-          counteRoute: "/search-blogs-count",
+          page,
+          countRoute: "/search-blogs-count",
           data_to_send: { author: user_id },
         });
         formateData.user_id = user_id;

@@ -958,6 +958,169 @@ server.post("/update-profile-img", verifyJWT, (req, res) => {
     });
 });
 
+server.get("/account-info", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  User.findOne({ _id: user_id })
+    .select("account_info")
+    .then((user) => {
+      return res.status(200).json({ acc_info: user.account_info });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/user-written-blogs", verifyJWT, (req, res) => {
+  let user_id = req.user;
+  let { page, draft, query, deletedDocCount } = req.body;
+
+  let maxLimit = 10;
+  let skipDocs = (page - 1) * maxLimit;
+
+  if (deletedDocCount) {
+    skipDocs -= deletedDocCount;
+  }
+
+  Blog.find({ author: user_id, draft, title: new RegExp(query, "i") })
+    .skip(skipDocs)
+    .limit(maxLimit)
+    .sort({ publishedAt: -1 })
+    .select(" title banner publishedAt blog_id activity des draft -_id")
+    .then((blogs) => {
+      return res.status(200).json({ blogs });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/user-written-blogs-count", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { draft, query } = req.body;
+
+  Blog.countDocuments({ author: user_id, draft, title: new RegExp(query, "i") })
+    .then((count) => {
+      return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      console.log(err.message);
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/delete-blog", verifyJWT, (req, res) => {
+  let user_id = req.user;
+  let { blog_id } = req.body;
+
+  Blog.findOneAndDelete({ blog_id })
+    .then((blog) => {
+      Notification.deleteMany({ blog: blog._id }).then((data) =>
+        console.log("notifications deleted")
+      );
+      Comment.deleteMany({ blog_id: blog._id }).then((data) =>
+        console.log("comments deleted")
+      );
+
+      User.findOneAndUpdate(
+        { _id: user_id },
+        { $pull: { blogs: blog._id }, $inc: { "account_info.total_posts": -1 } }
+      ).then((user) => console.log("Blog Deleted"));
+
+      return res.status(200).json({ status: "done" });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.get("/new-notifications", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  Notification.exists({
+    notification_for: user_id,
+    seen: false,
+    user: { $ne: user_id },
+  })
+    .then((result) => {
+      if (result) {
+        return res.status(200).json({ new_notifications_available: true });
+      } else {
+        return res.status(200).json({ new_notifications_available: false });
+      }
+    })
+    .catch((err) => {
+      console.log(err.message);
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/notifications", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { page, filter, deletedDocCount } = req.body;
+
+  let maxLimit = 10;
+
+  let findQuery = { notification_for: user_id, user: { $ne: user_id } };
+
+  let skipDocs = (page - 1) * maxLimit;
+
+  if (filter != "all") {
+    findQuery.type = filter;
+  }
+
+  if (deletedDocCount) {
+    skipDocs -= deletedDocCount;
+  }
+
+  Notification.find(findQuery)
+    .skip(skipDocs)
+    .limit(maxLimit)
+    .populate("blog", "title blog_id")
+    .populate(
+      "user",
+      "personal_info.fullname personal_info.username personal_info.profile_img"
+    )
+    .populate("comment", "comment")
+    .populate("reply", "comment")
+    .populate("replied_on_comment", "comment")
+    .sort({ createdAt: -1 })
+    .select("createdAt type seen reply")
+    .then((notifications) => {
+      Notification.updateMany(findQuery, { seen: true })
+        .skip((page - 1) * maxLimit)
+        .limit(maxLimit)
+        .then(() => console.log("notifications seen"));
+
+      return res.status(200).json({ notifications });
+    })
+    .catch((err) => {
+      console.log(err.message);
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/all-notification-count", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { filter } = req.body;
+
+  let findQuery = { notification_for: user_id, user: { $ne: user_id } };
+
+  if (filter != "all") {
+    findQuery.type = filter;
+  }
+
+  Notification.countDocuments(findQuery)
+    .then((count) => {
+      return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
 server.listen(PORT, () => {
   console.log("listening on port ->" + PORT);
 });

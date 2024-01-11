@@ -5,6 +5,7 @@ import axios from "axios";
 import NoDataMessage from "./nodata.component";
 import AnimationWrapper from "../common/page-animation";
 import CommentCard from "./comment-card.component";
+import { UserContext } from "../App";
 
 export const fetchComments = async ({
   skip = 0,
@@ -40,6 +41,7 @@ export const fetchComments = async ({
 };
 
 const CommentsContainer = () => {
+  let { darkMode } = useContext(UserContext);
   let {
     blog,
     blog: {
@@ -68,13 +70,11 @@ const CommentsContainer = () => {
 
   return (
     <div
-      className={
-        "max-sm:w-full fixed " +
-        (commentsWrapper
-          ? "top-0 sm:right-0"
-          : " top-[100%] sm:right-[-100%]") +
-        "  duration-700 max-sm:right-0 sm:top-0 w-[30%] min-w-[350px] h-full z-50 bg-white shadow-2xl p-8 px-16 overflow-y-auto overflow-x-hidden"
+      className={`max-sm:w-full fixed  + ${
+        (darkMode ? "bg-black text-white" : "bg-white") +
+        (commentsWrapper ? "top-0 sm:right-0" : " top-[100%] sm:right-[-100%]")
       }
+          duration-700 max-sm:right-0 sm:top-0 w-[40%] min-w-[450px] h-full z-50  shadow-2xl p-8 px-16 overflow-y-auto overflow-x-hidden`}
     >
       <div className="relative">
         <h1 className="text-xl font-medium">Comments</h1>
@@ -84,7 +84,7 @@ const CommentsContainer = () => {
 
         <button
           onClick={() => setCommentsWrapper((currentVal) => !currentVal)}
-          className="absolute top-0 right-0 flex justify-center items-center w-12 h-12 rounded-full bg-grey"
+          className="absolute top-0 right-0 flex justify-center items-center w-12 h-12 rounded-full "
         >
           <i className="fi fi-sr-cross-small text-2xl mt-1"></i>
         </button>
@@ -100,7 +100,7 @@ const CommentsContainer = () => {
             <AnimationWrapper key={i}>
               <CommentCard
                 index={i}
-                leftVal={comment.childrenLevel * 4}
+                leftVal={comment.childrenLevel * 3}
                 commentData={comment}
               />
             </AnimationWrapper>

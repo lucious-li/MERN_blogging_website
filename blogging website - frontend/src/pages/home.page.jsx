@@ -29,7 +29,7 @@ const HomePage = () => {
           state: blogs,
           data: data.blogs,
           page,
-          counteRoute: "/all-latest-blogs-count",
+          countRoute: "/all-latest-blogs-count",
         });
 
         setblogs(formateData);
@@ -60,7 +60,7 @@ const HomePage = () => {
           state: blogs,
           data: data.blogs,
           page,
-          counteRoute: "/search-blogs-count",
+          countRoute: "/search-blogs-count",
           data_to_send: { tag: pageState },
         });
         setblogs(formateData);

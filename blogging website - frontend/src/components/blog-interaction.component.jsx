@@ -95,7 +95,7 @@ const BlogInteraction = () => {
           >
             <i
               className={
-                "fi " + (islikedByUser ? "fi-sr-heart" : "fi-rr-heart")
+                "fi " + (islikedByUser ? "fi-sr-heart" : "fi-rr-heart ")
               }
             ></i>
           </button>
