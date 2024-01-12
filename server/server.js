@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import admin from "firebase-admin";
-import serviceAccountKey from "./mern-blog-website-b2604-firebase-adminsdk-28pf8-8442ddc4ea.json" assert { type: "json" };
+// import serviceAccountKey from "./mern-blog-website-b2604-firebase-adminsdk-28pf8-8442ddc4ea.json" assert { type: "json" };
 import aws from "aws-sdk";
 import { getAuth } from "firebase-admin/auth";
 //schema below
@@ -20,8 +20,11 @@ const server = express();
 let PORT = 3000;
 let maxLimit = 10;
 
+const firebaseConfigString = process.env.FIREBASE_CONFIG_JSON;
+const firebaseConfig = JSON.parse(firebaseConfigString);
+
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccountKey),
+  credential: admin.credential.cert(firebaseConfig),
 });
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
