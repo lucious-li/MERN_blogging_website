@@ -132,6 +132,14 @@ declare class CustomerProfiles extends Service {
    */
   deleteWorkflow(callback?: (err: AWSError, data: CustomerProfiles.Types.DeleteWorkflowResponse) => void): Request<CustomerProfiles.Types.DeleteWorkflowResponse, AWSError>;
   /**
+   * The process of detecting profile object type mapping by using given objects.
+   */
+  detectProfileObjectType(params: CustomerProfiles.Types.DetectProfileObjectTypeRequest, callback?: (err: AWSError, data: CustomerProfiles.Types.DetectProfileObjectTypeResponse) => void): Request<CustomerProfiles.Types.DetectProfileObjectTypeResponse, AWSError>;
+  /**
+   * The process of detecting profile object type mapping by using given objects.
+   */
+  detectProfileObjectType(callback?: (err: AWSError, data: CustomerProfiles.Types.DetectProfileObjectTypeResponse) => void): Request<CustomerProfiles.Types.DetectProfileObjectTypeResponse, AWSError>;
+  /**
    * Tests the auto-merging settings of your Identity Resolution Job without merging your data. It randomly selects a sample of matching groups from the existing matching results, and applies the automerging settings that you provided. You can then view the number of profiles in the sample, the number of matches, and the number of profiles identified to be merged. This enables you to evaluate the accuracy of the attributes in your matching list.  You can't view which profiles are matched and would be merged.  We strongly recommend you use this API to do a dry run of the automerging process before running the Identity Resolution Job. Include at least two matching attributes. If your matching list includes too few attributes (such as only FirstName or only LastName), there may be a large number of matches. This increases the chances of erroneous merges. 
    */
   getAutoMergingPreview(params: CustomerProfiles.Types.GetAutoMergingPreviewRequest, callback?: (err: AWSError, data: CustomerProfiles.Types.GetAutoMergingPreviewResponse) => void): Request<CustomerProfiles.Types.GetAutoMergingPreviewResponse, AWSError>;
@@ -713,7 +721,7 @@ declare namespace CustomerProfiles {
     /**
      * The description of the calculated attribute.
      */
-    Description?: text;
+    Description?: sensitiveText;
     /**
      * Mathematical expression and a list of attribute items specified in that expression.
      */
@@ -743,7 +751,7 @@ declare namespace CustomerProfiles {
     /**
      * The description of the calculated attribute.
      */
-    Description?: text;
+    Description?: sensitiveText;
     /**
      * Mathematical expression and a list of attribute items specified in that expression.
      */
@@ -909,11 +917,11 @@ declare namespace CustomerProfiles {
     /**
      * A unique account number that you have given to the customer.
      */
-    AccountNumber?: string1To255;
+    AccountNumber?: sensitiveString1To255;
     /**
      * Any additional information relevant to the customer’s profile.
      */
-    AdditionalInformation?: string1To1000;
+    AdditionalInformation?: sensitiveString1To1000;
     /**
      * The type of profile used to describe the customer.
      */
@@ -921,23 +929,23 @@ declare namespace CustomerProfiles {
     /**
      * The name of the customer’s business.
      */
-    BusinessName?: string1To255;
+    BusinessName?: sensitiveString1To255;
     /**
      * The customer’s first name.
      */
-    FirstName?: string1To255;
+    FirstName?: sensitiveString1To255;
     /**
      * The customer’s middle name.
      */
-    MiddleName?: string1To255;
+    MiddleName?: sensitiveString1To255;
     /**
      * The customer’s last name.
      */
-    LastName?: string1To255;
+    LastName?: sensitiveString1To255;
     /**
      * The customer’s birth date. 
      */
-    BirthDate?: string1To255;
+    BirthDate?: sensitiveString1To255;
     /**
      * The gender with which the customer identifies. 
      */
@@ -945,31 +953,31 @@ declare namespace CustomerProfiles {
     /**
      * The customer’s phone number, which has not been specified as a mobile, home, or business number. 
      */
-    PhoneNumber?: string1To255;
+    PhoneNumber?: sensitiveString1To255;
     /**
      * The customer’s mobile phone number.
      */
-    MobilePhoneNumber?: string1To255;
+    MobilePhoneNumber?: sensitiveString1To255;
     /**
      * The customer’s home phone number.
      */
-    HomePhoneNumber?: string1To255;
+    HomePhoneNumber?: sensitiveString1To255;
     /**
      * The customer’s business phone number.
      */
-    BusinessPhoneNumber?: string1To255;
+    BusinessPhoneNumber?: sensitiveString1To255;
     /**
      * The customer’s email address, which has not been specified as a personal or business address. 
      */
-    EmailAddress?: string1To255;
+    EmailAddress?: sensitiveString1To255;
     /**
      * The customer’s personal email address.
      */
-    PersonalEmailAddress?: string1To255;
+    PersonalEmailAddress?: sensitiveString1To255;
     /**
      * The customer’s business email address.
      */
-    BusinessEmailAddress?: string1To255;
+    BusinessEmailAddress?: sensitiveString1To255;
     /**
      * A generic address associated with the customer that is not mailing, shipping, or billing.
      */
@@ -993,11 +1001,11 @@ declare namespace CustomerProfiles {
     /**
      * An alternative to PartyType which accepts any string as input.
      */
-    PartyTypeString?: string1To255;
+    PartyTypeString?: sensitiveString1To255;
     /**
      * An alternative to Gender which accepts any string as input.
      */
-    GenderString?: string1To255;
+    GenderString?: sensitiveString1To255;
   }
   export interface CreateProfileResponse {
     /**
@@ -1167,6 +1175,37 @@ declare namespace CustomerProfiles {
      */
     UnhealthySince?: timestamp;
   }
+  export interface DetectProfileObjectTypeRequest {
+    /**
+     * A string that is serialized from a JSON object.
+     */
+    Objects: Objects;
+    /**
+     * The unique name of the domain.
+     */
+    DomainName: name;
+  }
+  export interface DetectProfileObjectTypeResponse {
+    /**
+     * Detected ProfileObjectType mappings from given objects. A maximum of one mapping is supported.
+     */
+    DetectedProfileObjectTypes?: DetectedProfileObjectTypes;
+  }
+  export interface DetectedProfileObjectType {
+    /**
+     * The format of sourceLastUpdatedTimestamp that was detected in fields.
+     */
+    SourceLastUpdatedTimestampFormat?: string1To255;
+    /**
+     * A map of the name and the ObjectType field.
+     */
+    Fields?: FieldMap;
+    /**
+     * A list of unique keys that can be used to map data to a profile.
+     */
+    Keys?: KeyMap;
+  }
+  export type DetectedProfileObjectTypes = DetectedProfileObjectType[];
   export type DomainList = ListDomainItem[];
   export interface DomainStats {
     /**
@@ -1438,7 +1477,7 @@ declare namespace CustomerProfiles {
     /**
      * The description of the calculated attribute.
      */
-    Description?: text;
+    Description?: sensitiveText;
     /**
      * The timestamp of when the calculated attribute definition was created.
      */
@@ -1738,7 +1777,7 @@ declare namespace CustomerProfiles {
     /**
      * The description of the profile object type.
      */
-    Description: text;
+    Description: sensitiveText;
     /**
      * A unique identifier for the object template.
      */
@@ -2065,7 +2104,7 @@ declare namespace CustomerProfiles {
     /**
      * The threshold for the calculated attribute.
      */
-    Description?: text;
+    Description?: sensitiveText;
     /**
      * The threshold for the calculated attribute.
      */
@@ -2667,6 +2706,7 @@ declare namespace CustomerProfiles {
   }
   export type ObjectTypeKeyList = ObjectTypeKey[];
   export type ObjectTypeNames = {[key: string]: typeName};
+  export type Objects = stringifiedJson[];
   export type Operator = "EQUAL_TO"|"GREATER_THAN"|"LESS_THAN"|"NOT_EQUAL_TO"|string;
   export type OperatorPropertiesKeys = "VALUE"|"VALUES"|"DATA_TYPE"|"UPPER_BOUND"|"LOWER_BOUND"|"SOURCE_DATA_TYPE"|"DESTINATION_DATA_TYPE"|"VALIDATION_ACTION"|"MASK_VALUE"|"MASK_LENGTH"|"TRUNCATE_LENGTH"|"MATH_OPERATION_FIELDS_ORDER"|"CONCAT_FORMAT"|"SUBFIELD_CATEGORY_MAP"|string;
   export type PartyType = "INDIVIDUAL"|"BUSINESS"|"OTHER"|string;
@@ -2679,11 +2719,11 @@ declare namespace CustomerProfiles {
     /**
      * A unique account number that you have given to the customer.
      */
-    AccountNumber?: string1To255;
+    AccountNumber?: sensitiveString1To255;
     /**
      * Any additional information relevant to the customer’s profile.
      */
-    AdditionalInformation?: string1To1000;
+    AdditionalInformation?: sensitiveString1To1000;
     /**
      * The type of profile used to describe the customer.
      */
@@ -2691,23 +2731,23 @@ declare namespace CustomerProfiles {
     /**
      * The name of the customer’s business.
      */
-    BusinessName?: string1To255;
+    BusinessName?: sensitiveString1To255;
     /**
      * The customer’s first name.
      */
-    FirstName?: string1To255;
+    FirstName?: sensitiveString1To255;
     /**
      * The customer’s middle name.
      */
-    MiddleName?: string1To255;
+    MiddleName?: sensitiveString1To255;
     /**
      * The customer’s last name.
      */
-    LastName?: string1To255;
+    LastName?: sensitiveString1To255;
     /**
      * The customer’s birth date. 
      */
-    BirthDate?: string1To255;
+    BirthDate?: sensitiveString1To255;
     /**
      * The gender with which the customer identifies. 
      */
@@ -2715,31 +2755,31 @@ declare namespace CustomerProfiles {
     /**
      * The customer's phone number, which has not been specified as a mobile, home, or business number.
      */
-    PhoneNumber?: string1To255;
+    PhoneNumber?: sensitiveString1To255;
     /**
      * The customer’s mobile phone number.
      */
-    MobilePhoneNumber?: string1To255;
+    MobilePhoneNumber?: sensitiveString1To255;
     /**
      * The customer’s home phone number.
      */
-    HomePhoneNumber?: string1To255;
+    HomePhoneNumber?: sensitiveString1To255;
     /**
      * The customer’s home phone number.
      */
-    BusinessPhoneNumber?: string1To255;
+    BusinessPhoneNumber?: sensitiveString1To255;
     /**
      * The customer’s email address, which has not been specified as a personal or business address. 
      */
-    EmailAddress?: string1To255;
+    EmailAddress?: sensitiveString1To255;
     /**
      * The customer’s personal email address.
      */
-    PersonalEmailAddress?: string1To255;
+    PersonalEmailAddress?: sensitiveString1To255;
     /**
      * The customer’s business email address.
      */
-    BusinessEmailAddress?: string1To255;
+    BusinessEmailAddress?: sensitiveString1To255;
     /**
      * A generic address associated with the customer that is not mailing, shipping, or billing.
      */
@@ -2767,11 +2807,11 @@ declare namespace CustomerProfiles {
     /**
      * An alternative to PartyType which accepts any string as input.
      */
-    PartyTypeString?: string1To255;
+    PartyTypeString?: sensitiveString1To255;
     /**
      * An alternative to Gender which accepts any string as input.
      */
-    GenderString?: string1To255;
+    GenderString?: sensitiveString1To255;
   }
   export type ProfileIdList = uuid[];
   export type ProfileIdToBeMergedList = uuid[];
@@ -2876,7 +2916,7 @@ declare namespace CustomerProfiles {
     /**
      * Description of the profile object type.
      */
-    Description: text;
+    Description: sensitiveText;
     /**
      * A unique identifier for the object template. For some attributes in the request, the service will use the default value from the object template when TemplateId is present. If these attributes are present in the request, the service may return a BadRequestException. These attributes include: AllowProfileCreation, SourceLastUpdatedTimestampFormat, Fields, and Keys. For example, if AllowProfileCreation is set to true when TemplateId is set, the service may return a BadRequestException.
      */
@@ -2918,7 +2958,7 @@ declare namespace CustomerProfiles {
     /**
      * Description of the profile object type.
      */
-    Description: text;
+    Description: sensitiveText;
     /**
      * A unique identifier for the object template.
      */
@@ -3338,7 +3378,7 @@ declare namespace CustomerProfiles {
     /**
      * The description of the calculated attribute.
      */
-    Description?: text;
+    Description?: sensitiveText;
     /**
      * The conditions including range, object count, and threshold for the calculated attribute.
      */
@@ -3356,7 +3396,7 @@ declare namespace CustomerProfiles {
     /**
      * The description of the calculated attribute.
      */
-    Description?: text;
+    Description?: sensitiveText;
     /**
      * The timestamp of when the calculated attribute definition was created.
      */
@@ -3462,11 +3502,11 @@ declare namespace CustomerProfiles {
     /**
      * Any additional information relevant to the customer’s profile.
      */
-    AdditionalInformation?: string0To1000;
+    AdditionalInformation?: sensitiveString0To1000;
     /**
      * A unique account number that you have given to the customer.
      */
-    AccountNumber?: string0To255;
+    AccountNumber?: sensitiveString0To255;
     /**
      * The type of profile used to describe the customer.
      */
@@ -3474,23 +3514,23 @@ declare namespace CustomerProfiles {
     /**
      * The name of the customer’s business.
      */
-    BusinessName?: string0To255;
+    BusinessName?: sensitiveString0To255;
     /**
      * The customer’s first name.
      */
-    FirstName?: string0To255;
+    FirstName?: sensitiveString0To255;
     /**
      * The customer’s middle name.
      */
-    MiddleName?: string0To255;
+    MiddleName?: sensitiveString0To255;
     /**
      * The customer’s last name.
      */
-    LastName?: string0To255;
+    LastName?: sensitiveString0To255;
     /**
      * The customer’s birth date. 
      */
-    BirthDate?: string0To255;
+    BirthDate?: sensitiveString0To255;
     /**
      * The gender with which the customer identifies. 
      */
@@ -3498,31 +3538,31 @@ declare namespace CustomerProfiles {
     /**
      * The customer’s phone number, which has not been specified as a mobile, home, or business number. 
      */
-    PhoneNumber?: string0To255;
+    PhoneNumber?: sensitiveString0To255;
     /**
      * The customer’s mobile phone number.
      */
-    MobilePhoneNumber?: string0To255;
+    MobilePhoneNumber?: sensitiveString0To255;
     /**
      * The customer’s home phone number.
      */
-    HomePhoneNumber?: string0To255;
+    HomePhoneNumber?: sensitiveString0To255;
     /**
      * The customer’s business phone number.
      */
-    BusinessPhoneNumber?: string0To255;
+    BusinessPhoneNumber?: sensitiveString0To255;
     /**
      * The customer’s email address, which has not been specified as a personal or business address. 
      */
-    EmailAddress?: string0To255;
+    EmailAddress?: sensitiveString0To255;
     /**
      * The customer’s personal email address.
      */
-    PersonalEmailAddress?: string0To255;
+    PersonalEmailAddress?: sensitiveString0To255;
     /**
      * The customer’s business email address.
      */
-    BusinessEmailAddress?: string0To255;
+    BusinessEmailAddress?: sensitiveString0To255;
     /**
      * A generic address associated with the customer that is not mailing, shipping, or billing.
      */
@@ -3546,11 +3586,11 @@ declare namespace CustomerProfiles {
     /**
      * An alternative to PartyType which accepts any string as input.
      */
-    PartyTypeString?: string0To255;
+    PartyTypeString?: sensitiveString0To255;
     /**
      * An alternative to Gender which accepts any string as input.
      */
-    GenderString?: string0To255;
+    GenderString?: sensitiveString0To255;
   }
   export interface UpdateProfileResponse {
     /**
@@ -3603,8 +3643,12 @@ declare namespace CustomerProfiles {
   export type s3BucketName = string;
   export type s3KeyName = string;
   export type s3KeyNameCustomerOutputConfig = string;
+  export type sensitiveString0To1000 = string;
+  export type sensitiveString0To255 = string;
+  export type sensitiveString1To1000 = string;
+  export type sensitiveString1To255 = string;
+  export type sensitiveText = string;
   export type sqsQueueUrl = string;
-  export type string0To1000 = string;
   export type string0To255 = string;
   export type string1To1000 = string;
   export type string1To255 = string;

@@ -157,6 +157,14 @@ declare class SSM extends Service {
    */
   deleteMaintenanceWindow(callback?: (err: AWSError, data: SSM.Types.DeleteMaintenanceWindowResult) => void): Request<SSM.Types.DeleteMaintenanceWindowResult, AWSError>;
   /**
+   * Delete an OpsItem. You must have permission in Identity and Access Management (IAM) to delete an OpsItem.   Note the following important information about this operation.   Deleting an OpsItem is irreversible. You can't restore a deleted OpsItem.   This operation uses an eventual consistency model, which means the system can take a few minutes to complete this operation. If you delete an OpsItem and immediately call, for example, GetOpsItem, the deleted OpsItem might still appear in the response.    This operation is idempotent. The system doesn't throw an exception if you repeatedly call this operation for the same OpsItem. If the first call is successful, all additional calls return the same successful response as the first call.   This operation doesn't support cross-account calls. A delegated administrator or management account can't delete OpsItems in other accounts, even if OpsCenter has been set up for cross-account administration. For more information about cross-account administration, see Setting up OpsCenter to centrally manage OpsItems across accounts in the Systems Manager User Guide.   
+   */
+  deleteOpsItem(params: SSM.Types.DeleteOpsItemRequest, callback?: (err: AWSError, data: SSM.Types.DeleteOpsItemResponse) => void): Request<SSM.Types.DeleteOpsItemResponse, AWSError>;
+  /**
+   * Delete an OpsItem. You must have permission in Identity and Access Management (IAM) to delete an OpsItem.   Note the following important information about this operation.   Deleting an OpsItem is irreversible. You can't restore a deleted OpsItem.   This operation uses an eventual consistency model, which means the system can take a few minutes to complete this operation. If you delete an OpsItem and immediately call, for example, GetOpsItem, the deleted OpsItem might still appear in the response.    This operation is idempotent. The system doesn't throw an exception if you repeatedly call this operation for the same OpsItem. If the first call is successful, all additional calls return the same successful response as the first call.   This operation doesn't support cross-account calls. A delegated administrator or management account can't delete OpsItems in other accounts, even if OpsCenter has been set up for cross-account administration. For more information about cross-account administration, see Setting up OpsCenter to centrally manage OpsItems across accounts in the Systems Manager User Guide.   
+   */
+  deleteOpsItem(callback?: (err: AWSError, data: SSM.Types.DeleteOpsItemResponse) => void): Request<SSM.Types.DeleteOpsItemResponse, AWSError>;
+  /**
    * Delete OpsMetadata related to an application.
    */
   deleteOpsMetadata(params: SSM.Types.DeleteOpsMetadataRequest, callback?: (err: AWSError, data: SSM.Types.DeleteOpsMetadataResult) => void): Request<SSM.Types.DeleteOpsMetadataResult, AWSError>;
@@ -1858,6 +1866,10 @@ declare namespace SSM {
      * The name of the Change Manager change request.
      */
     ChangeRequestName?: ChangeRequestName;
+    /**
+     * Variables defined for the automation.
+     */
+    Variables?: AutomationParameterMap;
   }
   export interface AutomationExecutionFilter {
     /**
@@ -1997,7 +2009,7 @@ declare namespace SSM {
     ChangeRequestName?: ChangeRequestName;
   }
   export type AutomationExecutionMetadataList = AutomationExecutionMetadata[];
-  export type AutomationExecutionStatus = "Pending"|"InProgress"|"Waiting"|"Success"|"TimedOut"|"Cancelling"|"Cancelled"|"Failed"|"PendingApproval"|"Approved"|"Rejected"|"Scheduled"|"RunbookInProgress"|"PendingChangeCalendarOverride"|"ChangeCalendarOverrideApproved"|"ChangeCalendarOverrideRejected"|"CompletedWithSuccess"|"CompletedWithFailure"|string;
+  export type AutomationExecutionStatus = "Pending"|"InProgress"|"Waiting"|"Success"|"TimedOut"|"Cancelling"|"Cancelled"|"Failed"|"PendingApproval"|"Approved"|"Rejected"|"Scheduled"|"RunbookInProgress"|"PendingChangeCalendarOverride"|"ChangeCalendarOverrideApproved"|"ChangeCalendarOverrideRejected"|"CompletedWithSuccess"|"CompletedWithFailure"|"Exited"|string;
   export type AutomationParameterKey = string;
   export type AutomationParameterMap = {[key: string]: AutomationParameterValueList};
   export type AutomationParameterValue = string;
@@ -2470,7 +2482,7 @@ declare namespace SSM {
     SeveritySummary?: SeveritySummary;
   }
   export type ComputerName = string;
-  export type ConnectionStatus = "Connected"|"NotConnected"|string;
+  export type ConnectionStatus = "connected"|"notconnected"|string;
   export type ContentLength = number;
   export interface CreateActivationRequest {
     /**
@@ -2795,11 +2807,11 @@ declare namespace SSM {
   }
   export interface CreateOpsItemRequest {
     /**
-     * Information about the OpsItem. 
+     * User-defined text that contains information about the OpsItem, in Markdown format.   Provide enough information so that users viewing this OpsItem for the first time understand the issue.  
      */
     Description: OpsItemDescription;
     /**
-     * The type of OpsItem to create. Systems Manager supports the following types of OpsItems:    /aws/issue  This type of OpsItem is used for default OpsItems created by OpsCenter.     /aws/changerequest  This type of OpsItem is used by Change Manager for reviewing and approving or rejecting change requests.     /aws/insights  This type of OpsItem is used by OpsCenter for aggregating and reporting on duplicate OpsItems.   
+     * The type of OpsItem to create. Systems Manager supports the following types of OpsItems:    /aws/issue  This type of OpsItem is used for default OpsItems created by OpsCenter.     /aws/changerequest  This type of OpsItem is used by Change Manager for reviewing and approving or rejecting change requests.     /aws/insight  This type of OpsItem is used by OpsCenter for aggregating and reporting on duplicate OpsItems.   
      */
     OpsItemType?: OpsItemType;
     /**
@@ -3060,6 +3072,14 @@ declare namespace SSM {
      * The ID of the deleted maintenance window.
      */
     WindowId?: MaintenanceWindowId;
+  }
+  export interface DeleteOpsItemRequest {
+    /**
+     * The ID of the OpsItem that you want to delete.
+     */
+    OpsItemId: OpsItemId;
+  }
+  export interface DeleteOpsItemResponse {
   }
   export interface DeleteOpsMetadataRequest {
     /**
@@ -3616,7 +3636,7 @@ declare namespace SSM {
      */
     InstanceId: InstanceId;
     /**
-     * Each element in the array is a structure containing a key-value pair. Supported keys for DescribeInstancePatchesinclude the following:     Classification   Sample values: Security | SecurityUpdates      KBId   Sample values: KB4480056 | java-1.7.0-openjdk.x86_64      Severity   Sample values: Important | Medium | Low      State   Sample values: Installed | InstalledOther | InstalledPendingReboot   
+     * Each element in the array is a structure containing a key-value pair. Supported keys for DescribeInstancePatchesinclude the following:     Classification   Sample values: Security | SecurityUpdates      KBId   Sample values: KB4480056 | java-1.7.0-openjdk.x86_64      Severity   Sample values: Important | Medium | Low      State   Sample values: Installed | InstalledOther | InstalledPendingReboot  For lists of all State values, see Understanding patch compliance state values in the Amazon Web Services Systems Manager User Guide.  
      */
     Filters?: PatchOrchestratorFilterList;
     /**
@@ -7148,7 +7168,7 @@ declare namespace SSM {
      */
     CreatedBy?: String;
     /**
-     * The type of OpsItem. Systems Manager supports the following types of OpsItems:    /aws/issue  This type of OpsItem is used for default OpsItems created by OpsCenter.     /aws/changerequest  This type of OpsItem is used by Change Manager for reviewing and approving or rejecting change requests.     /aws/insights  This type of OpsItem is used by OpsCenter for aggregating and reporting on duplicate OpsItems.   
+     * The type of OpsItem. Systems Manager supports the following types of OpsItems:    /aws/issue  This type of OpsItem is used for default OpsItems created by OpsCenter.     /aws/changerequest  This type of OpsItem is used by Change Manager for reviewing and approving or rejecting change requests.     /aws/insight  This type of OpsItem is used by OpsCenter for aggregating and reporting on duplicate OpsItems.   
      */
     OpsItemType?: OpsItemType;
     /**
@@ -7448,7 +7468,7 @@ declare namespace SSM {
      */
     Severity?: OpsItemSeverity;
     /**
-     * The type of OpsItem. Systems Manager supports the following types of OpsItems:    /aws/issue  This type of OpsItem is used for default OpsItems created by OpsCenter.     /aws/changerequest  This type of OpsItem is used by Change Manager for reviewing and approving or rejecting change requests.     /aws/insights  This type of OpsItem is used by OpsCenter for aggregating and reporting on duplicate OpsItems.   
+     * The type of OpsItem. Systems Manager supports the following types of OpsItems:    /aws/issue  This type of OpsItem is used for default OpsItems created by OpsCenter.     /aws/changerequest  This type of OpsItem is used by Change Manager for reviewing and approving or rejecting change requests.     /aws/insight  This type of OpsItem is used by OpsCenter for aggregating and reporting on duplicate OpsItems.   
      */
     OpsItemType?: OpsItemType;
     /**
@@ -7735,6 +7755,28 @@ declare namespace SSM {
   export type ParametersFilterList = ParametersFilter[];
   export type ParametersFilterValue = string;
   export type ParametersFilterValueList = ParametersFilterValue[];
+  export interface ParentStepDetails {
+    /**
+     * The unique ID of a step execution.
+     */
+    StepExecutionId?: String;
+    /**
+     * The name of the step.
+     */
+    StepName?: String;
+    /**
+     * The name of the automation action.
+     */
+    Action?: AutomationActionName;
+    /**
+     * The current repetition of the loop represented by an integer.
+     */
+    Iteration?: Integer;
+    /**
+     * The current value of the specified iterator in the loop.
+     */
+    IteratorValue?: String;
+  }
   export interface Patch {
     /**
      * The ID of the patch. Applies to Windows patches only.  This ID isn't the same as the Microsoft Knowledge Base ID. 
@@ -8608,7 +8650,7 @@ declare namespace SSM {
   export type ResourceDataSyncType = string;
   export type ResourceId = string;
   export type ResourcePolicyMaxResults = number;
-  export type ResourceType = "ManagedInstance"|"Document"|"EC2Instance"|string;
+  export type ResourceType = "ManagedInstance"|"EC2Instance"|string;
   export type ResourceTypeForTagging = "Document"|"ManagedInstance"|"MaintenanceWindow"|"Parameter"|"PatchBaseline"|"OpsItem"|"OpsMetadata"|"Automation"|"Association"|string;
   export type ResponseCode = number;
   export interface ResultAttribute {
@@ -9226,10 +9268,14 @@ declare namespace SSM {
      * The CloudWatch alarms that were invoked by the automation.
      */
     TriggeredAlarms?: AlarmStateInformationList;
+    /**
+     * Information about the parent step.
+     */
+    ParentStepDetails?: ParentStepDetails;
   }
   export interface StepExecutionFilter {
     /**
-     * One or more keys to limit the results. Valid filter keys include the following: StepName, Action, StepExecutionId, StepExecutionStatus, StartTimeBefore, StartTimeAfter.
+     * One or more keys to limit the results.
      */
     Key: StepExecutionFilterKey;
     /**
@@ -9237,7 +9283,7 @@ declare namespace SSM {
      */
     Values: StepExecutionFilterValueList;
   }
-  export type StepExecutionFilterKey = "StartTimeBefore"|"StartTimeAfter"|"StepExecutionStatus"|"StepExecutionId"|"StepName"|"Action"|string;
+  export type StepExecutionFilterKey = "StartTimeBefore"|"StartTimeAfter"|"StepExecutionStatus"|"StepExecutionId"|"StepName"|"Action"|"ParentStepExecutionId"|"ParentStepIteration"|"ParentStepIteratorValue"|string;
   export type StepExecutionFilterList = StepExecutionFilter[];
   export type StepExecutionFilterValue = string;
   export type StepExecutionFilterValueList = StepExecutionFilterValue[];
@@ -9837,7 +9883,7 @@ declare namespace SSM {
   }
   export interface UpdateOpsItemRequest {
     /**
-     * Update the information about the OpsItem. Provide enough information so that users reading this OpsItem for the first time understand the issue. 
+     * User-defined text that contains information about the OpsItem, in Markdown format. 
      */
     Description?: OpsItemDescription;
     /**
@@ -10053,7 +10099,7 @@ declare namespace SSM {
      */
     SettingId: ServiceSettingId;
     /**
-     * The new value to specify for the service setting. The following list specifies the available values for each setting.    /ssm/managed-instance/default-ec2-instance-management-role: The name of an IAM role     /ssm/automation/customer-script-log-destination: CloudWatch     /ssm/automation/customer-script-log-group-name: The name of an Amazon CloudWatch Logs log group    /ssm/documents/console/public-sharing-permission: Enable or Disable     /ssm/managed-instance/activation-tier: standard or advanced     /ssm/opsinsights/opscenter: Enabled or Disabled     /ssm/parameter-store/default-parameter-tier: Standard, Advanced, Intelligent-Tiering     /ssm/parameter-store/high-throughput-enabled: true or false   
+     * The new value to specify for the service setting. The following list specifies the available values for each setting.   For /ssm/managed-instance/default-ec2-instance-management-role, enter the name of an IAM role.    For /ssm/automation/customer-script-log-destination, enter CloudWatch.   For /ssm/automation/customer-script-log-group-name, enter the name of an Amazon CloudWatch Logs log group.   For /ssm/documents/console/public-sharing-permission, enter Enable or Disable.   For /ssm/managed-instance/activation-tier, enter standard or advanced.    For /ssm/opsinsights/opscenter, enter Enabled or Disabled.    For /ssm/parameter-store/default-parameter-tier, enter Standard, Advanced, or Intelligent-Tiering    For /ssm/parameter-store/high-throughput-enabled, enter true or false.  
      */
     SettingValue: ServiceSettingValue;
   }

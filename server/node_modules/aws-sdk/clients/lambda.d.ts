@@ -279,11 +279,11 @@ declare class Lambda extends Service {
    */
   getRuntimeManagementConfig(callback?: (err: AWSError, data: Lambda.Types.GetRuntimeManagementConfigResponse) => void): Request<Lambda.Types.GetRuntimeManagementConfigResponse, AWSError>;
   /**
-   * Invokes a Lambda function. You can invoke a function synchronously (and wait for the response), or asynchronously. To invoke a function asynchronously, set InvocationType to Event. For synchronous invocation, details about the function response, including errors, are included in the response body and headers. For either invocation type, you can find more information in the execution log and trace. When an error occurs, your function may be invoked multiple times. Retry behavior varies by error type, client, event source, and invocation type. For example, if you invoke a function asynchronously and it returns an error, Lambda executes the function up to two more times. For more information, see Error handling and automatic retries in Lambda. For asynchronous invocation, Lambda adds events to a queue before sending them to your function. If your function does not have enough capacity to keep up with the queue, events may be lost. Occasionally, your function may receive the same event multiple times, even if no error occurs. To retain events that were not processed, configure your function with a dead-letter queue. The status code in the API response doesn't reflect function errors. Error codes are reserved for errors that prevent your function from executing, such as permissions errors, quota errors, or issues with your function's code and configuration. For example, Lambda returns TooManyRequestsException if running the function would cause you to exceed a concurrency limit at either the account level (ConcurrentInvocationLimitExceeded) or function level (ReservedFunctionConcurrentInvocationLimitExceeded). For functions with a long timeout, your client might disconnect during synchronous invocation while it waits for a response. Configure your HTTP client, SDK, firewall, proxy, or operating system to allow for long connections with timeout or keep-alive settings. This operation requires permission for the lambda:InvokeFunction action. For details on how to set up permissions for cross-account invocations, see Granting function access to other accounts.
+   * Invokes a Lambda function. You can invoke a function synchronously (and wait for the response), or asynchronously. By default, Lambda invokes your function synchronously (i.e. theInvocationType is RequestResponse). To invoke a function asynchronously, set InvocationType to Event. Lambda passes the ClientContext object to your function for synchronous invocations only. For synchronous invocation, details about the function response, including errors, are included in the response body and headers. For either invocation type, you can find more information in the execution log and trace. When an error occurs, your function may be invoked multiple times. Retry behavior varies by error type, client, event source, and invocation type. For example, if you invoke a function asynchronously and it returns an error, Lambda executes the function up to two more times. For more information, see Error handling and automatic retries in Lambda. For asynchronous invocation, Lambda adds events to a queue before sending them to your function. If your function does not have enough capacity to keep up with the queue, events may be lost. Occasionally, your function may receive the same event multiple times, even if no error occurs. To retain events that were not processed, configure your function with a dead-letter queue. The status code in the API response doesn't reflect function errors. Error codes are reserved for errors that prevent your function from executing, such as permissions errors, quota errors, or issues with your function's code and configuration. For example, Lambda returns TooManyRequestsException if running the function would cause you to exceed a concurrency limit at either the account level (ConcurrentInvocationLimitExceeded) or function level (ReservedFunctionConcurrentInvocationLimitExceeded). For functions with a long timeout, your client might disconnect during synchronous invocation while it waits for a response. Configure your HTTP client, SDK, firewall, proxy, or operating system to allow for long connections with timeout or keep-alive settings. This operation requires permission for the lambda:InvokeFunction action. For details on how to set up permissions for cross-account invocations, see Granting function access to other accounts.
    */
   invoke(params: Lambda.Types.InvocationRequest, callback?: (err: AWSError, data: Lambda.Types.InvocationResponse) => void): Request<Lambda.Types.InvocationResponse, AWSError>;
   /**
-   * Invokes a Lambda function. You can invoke a function synchronously (and wait for the response), or asynchronously. To invoke a function asynchronously, set InvocationType to Event. For synchronous invocation, details about the function response, including errors, are included in the response body and headers. For either invocation type, you can find more information in the execution log and trace. When an error occurs, your function may be invoked multiple times. Retry behavior varies by error type, client, event source, and invocation type. For example, if you invoke a function asynchronously and it returns an error, Lambda executes the function up to two more times. For more information, see Error handling and automatic retries in Lambda. For asynchronous invocation, Lambda adds events to a queue before sending them to your function. If your function does not have enough capacity to keep up with the queue, events may be lost. Occasionally, your function may receive the same event multiple times, even if no error occurs. To retain events that were not processed, configure your function with a dead-letter queue. The status code in the API response doesn't reflect function errors. Error codes are reserved for errors that prevent your function from executing, such as permissions errors, quota errors, or issues with your function's code and configuration. For example, Lambda returns TooManyRequestsException if running the function would cause you to exceed a concurrency limit at either the account level (ConcurrentInvocationLimitExceeded) or function level (ReservedFunctionConcurrentInvocationLimitExceeded). For functions with a long timeout, your client might disconnect during synchronous invocation while it waits for a response. Configure your HTTP client, SDK, firewall, proxy, or operating system to allow for long connections with timeout or keep-alive settings. This operation requires permission for the lambda:InvokeFunction action. For details on how to set up permissions for cross-account invocations, see Granting function access to other accounts.
+   * Invokes a Lambda function. You can invoke a function synchronously (and wait for the response), or asynchronously. By default, Lambda invokes your function synchronously (i.e. theInvocationType is RequestResponse). To invoke a function asynchronously, set InvocationType to Event. Lambda passes the ClientContext object to your function for synchronous invocations only. For synchronous invocation, details about the function response, including errors, are included in the response body and headers. For either invocation type, you can find more information in the execution log and trace. When an error occurs, your function may be invoked multiple times. Retry behavior varies by error type, client, event source, and invocation type. For example, if you invoke a function asynchronously and it returns an error, Lambda executes the function up to two more times. For more information, see Error handling and automatic retries in Lambda. For asynchronous invocation, Lambda adds events to a queue before sending them to your function. If your function does not have enough capacity to keep up with the queue, events may be lost. Occasionally, your function may receive the same event multiple times, even if no error occurs. To retain events that were not processed, configure your function with a dead-letter queue. The status code in the API response doesn't reflect function errors. Error codes are reserved for errors that prevent your function from executing, such as permissions errors, quota errors, or issues with your function's code and configuration. For example, Lambda returns TooManyRequestsException if running the function would cause you to exceed a concurrency limit at either the account level (ConcurrentInvocationLimitExceeded) or function level (ReservedFunctionConcurrentInvocationLimitExceeded). For functions with a long timeout, your client might disconnect during synchronous invocation while it waits for a response. Configure your HTTP client, SDK, firewall, proxy, or operating system to allow for long connections with timeout or keep-alive settings. This operation requires permission for the lambda:InvokeFunction action. For details on how to set up permissions for cross-account invocations, see Granting function access to other accounts.
    */
   invoke(callback?: (err: AWSError, data: Lambda.Types.InvocationResponse) => void): Request<Lambda.Types.InvocationResponse, AWSError>;
   /**
@@ -768,6 +768,7 @@ declare namespace Lambda {
      */
     ConsumerGroupId?: URI;
   }
+  export type ApplicationLogLevel = "TRACE"|"DEBUG"|"INFO"|"WARN"|"ERROR"|"FATAL"|string;
   export type Architecture = "x86_64"|"arm64"|string;
   export type ArchitecturesList = Architecture[];
   export type Arn = string;
@@ -1076,6 +1077,10 @@ declare namespace Lambda {
      * The function's SnapStart setting.
      */
     SnapStart?: SnapStart;
+    /**
+     * The function's Amazon CloudWatch Logs configuration settings.
+     */
+    LoggingConfig?: LoggingConfig;
   }
   export interface CreateFunctionUrlConfigRequest {
     /**
@@ -1608,6 +1613,10 @@ declare namespace Lambda {
      * The ARN of the runtime and any errors that occured.
      */
     RuntimeVersionConfig?: RuntimeVersionConfig;
+    /**
+     * The function's Amazon CloudWatch Logs configuration settings.
+     */
+    LoggingConfig?: LoggingConfig;
   }
   export interface FunctionEventInvokeConfig {
     /**
@@ -2565,7 +2574,27 @@ declare namespace Lambda {
     Versions?: FunctionList;
   }
   export type LocalMountPath = string;
+  export type LogFormat = "JSON"|"Text"|string;
+  export type LogGroup = string;
   export type LogType = "None"|"Tail"|string;
+  export interface LoggingConfig {
+    /**
+     * The format in which Lambda sends your function's application and system logs to CloudWatch. Select between plain text and structured JSON.
+     */
+    LogFormat?: LogFormat;
+    /**
+     * Set this property to filter the application logs for your function that Lambda sends to CloudWatch. Lambda only sends application logs at the selected level and lower.
+     */
+    ApplicationLogLevel?: ApplicationLogLevel;
+    /**
+     * Set this property to filter the system logs for your function that Lambda sends to CloudWatch. Lambda only sends system logs at the selected level and lower.
+     */
+    SystemLogLevel?: SystemLogLevel;
+    /**
+     * The name of the Amazon CloudWatch log group the function sends logs to. By default, Lambda functions send logs to a default log group named /aws/lambda/&lt;function name&gt;. To use a different log group, enter an existing log group or enter a new log group name.
+     */
+    LogGroup?: LogGroup;
+  }
   export type Long = number;
   export type MasterRegion = string;
   export type MaxAge = number;
@@ -2586,6 +2615,7 @@ declare namespace Lambda {
   export type NamespacedFunctionName = string;
   export type NamespacedStatementId = string;
   export type NonNegativeInteger = number;
+  export type NullableBoolean = boolean;
   export interface OnFailure {
     /**
      * The Amazon Resource Name (ARN) of the destination resource.
@@ -2887,7 +2917,7 @@ declare namespace Lambda {
   export type ResourceArn = string;
   export type ResponseStreamingInvocationType = "RequestResponse"|"DryRun"|string;
   export type RoleArn = string;
-  export type Runtime = "nodejs"|"nodejs4.3"|"nodejs6.10"|"nodejs8.10"|"nodejs10.x"|"nodejs12.x"|"nodejs14.x"|"nodejs16.x"|"java8"|"java8.al2"|"java11"|"python2.7"|"python3.6"|"python3.7"|"python3.8"|"python3.9"|"dotnetcore1.0"|"dotnetcore2.0"|"dotnetcore2.1"|"dotnetcore3.1"|"dotnet6"|"nodejs4.3-edge"|"go1.x"|"ruby2.5"|"ruby2.7"|"provided"|"provided.al2"|"nodejs18.x"|"python3.10"|"java17"|"ruby3.2"|"python3.11"|string;
+  export type Runtime = "nodejs"|"nodejs4.3"|"nodejs6.10"|"nodejs8.10"|"nodejs10.x"|"nodejs12.x"|"nodejs14.x"|"nodejs16.x"|"java8"|"java8.al2"|"java11"|"python2.7"|"python3.6"|"python3.7"|"python3.8"|"python3.9"|"dotnetcore1.0"|"dotnetcore2.0"|"dotnetcore2.1"|"dotnetcore3.1"|"dotnet6"|"nodejs4.3-edge"|"go1.x"|"ruby2.5"|"ruby2.7"|"provided"|"provided.al2"|"nodejs18.x"|"python3.10"|"java17"|"ruby3.2"|"python3.11"|"nodejs20.x"|"provided.al2023"|"python3.12"|"java21"|string;
   export type RuntimeVersionArn = string;
   export interface RuntimeVersionConfig {
     /**
@@ -2973,6 +3003,7 @@ declare namespace Lambda {
   export type StringList = String[];
   export type SubnetId = string;
   export type SubnetIds = SubnetId[];
+  export type SystemLogLevel = "DEBUG"|"INFO"|"WARN"|string;
   export type TagKey = string;
   export type TagKeyList = TagKey[];
   export interface TagResourceRequest {
@@ -3248,6 +3279,10 @@ declare namespace Lambda {
      * The function's SnapStart setting.
      */
     SnapStart?: SnapStart;
+    /**
+     * The function's Amazon CloudWatch Logs configuration settings.
+     */
+    LoggingConfig?: LoggingConfig;
   }
   export interface UpdateFunctionEventInvokeConfigRequest {
     /**
@@ -3334,6 +3369,10 @@ declare namespace Lambda {
      * A list of VPC security group IDs.
      */
     SecurityGroupIds?: SecurityGroupIds;
+    /**
+     * Allows outbound IPv6 traffic on VPC functions that are connected to dual-stack subnets.
+     */
+    Ipv6AllowedForDualStack?: NullableBoolean;
   }
   export interface VpcConfigResponse {
     /**
@@ -3348,6 +3387,10 @@ declare namespace Lambda {
      * The ID of the VPC.
      */
     VpcId?: VpcId;
+    /**
+     * Allows outbound IPv6 traffic on VPC functions that are connected to dual-stack subnets.
+     */
+    Ipv6AllowedForDualStack?: NullableBoolean;
   }
   export type VpcId = string;
   export type Weight = number;
