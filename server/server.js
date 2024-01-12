@@ -8,7 +8,6 @@ import cors from "cors";
 import admin from "firebase-admin";
 import serviceAccountKey from "./mern-blog-website-b2604-firebase-adminsdk-28pf8-8442ddc4ea.json" assert { type: "json" };
 import aws from "aws-sdk";
-
 import { getAuth } from "firebase-admin/auth";
 //schema below
 import User from "./Schema/User.js";

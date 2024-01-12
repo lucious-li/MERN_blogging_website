@@ -1,11 +1,11 @@
-POST http://localhost:3000/signin
-Content-Type: application/json
+# POST http://localhost:3000/signin
+# Content-Type: application/json
 
-{
+# {
 
-    "email":"111@mail.com",
-    "password":"111Qq2"
-}
+#     "email":"111@mail.com",
+#     "password":"111Qq2"
+# }
 
 # GET http://localhost:3000/get-upload-url
 
@@ -75,3 +75,15 @@ Content-Type: application/json
 #     "CurrentPassword":"111Qq1",
 #     "NewPassword":"111Qq2"
 #  }
+
+
+
+
+POST  https://leadfblog-mern-website.vercel.app/signin
+Content-Type: application/json
+
+{
+
+    "email":"lucious-li@outlook.com",
+    "password":"111Qq4"
+}
