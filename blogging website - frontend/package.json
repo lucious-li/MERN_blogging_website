@@ -9,6 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
+  "publish": "dist",
   "dependencies": {
     "@editorjs/code": "^2.8.0",
     "@editorjs/editorjs": "^2.27.2",
