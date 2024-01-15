@@ -5,10 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run fix-permissions",
+    "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "fix-permissions": "chmod +x /node_modules/.bin/vite"
+    "preview": "vite preview"
   },
   "publish": "dist",
   "dependencies": {
