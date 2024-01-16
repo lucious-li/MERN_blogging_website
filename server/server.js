@@ -220,7 +220,7 @@ server.post("/forgot-password", (req, res) => {
 
     Please click the link below to reset your password, And the link will expire in 10 minutes
     
-      http://localhost:5173/reset-password/${user._id}/${token}
+    https://www.leafblog.site/reset-password/${user._id}/${token}
     
     If you didn't make this request, you can safely ignore this email and carry on as usual.`,
       };
