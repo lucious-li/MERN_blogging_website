@@ -1,10 +1,12 @@
 About The Project  
   
-"Express your thoughts uniquely! Whether you want to impart your wisdom, share personal experiences, or stay updated on the latest happenings, showcase your articles in a distinct and intelligent manner."  
-Introducing Leaf Blog, a cutting-edge social blogging platform that empowers everyone to voice their perspectives and explore others' opinions on a myriad of topics.   
-It serves as a bridge to connect with individuals and gain insights into the collective mindset.   
+  "Express your thoughts uniquely! Whether you want to impart your wisdom, share personal experiences, or stay updated on the latest happenings, showcase your articles in a distinct and intelligent manner."
   
-Frontend:  
+  Introducing LeafBlog, a cutting-edge social blogging platform that empowers everyone to voice their perspectives and explore others' opinions on a myriad of topics.   
+  
+  It serves as a bridge to connect with individuals and gain insights into the collective mindset.   
+  
+Frontend:   
 React  
 Firebase  
 React Router  
@@ -15,7 +17,10 @@ material-ui
 Backend:
 Express  
 Jsonwebtoken  
-MongoDB  
+
+DB:  
+MongoDB     
+AWS S3 bucket
 
 Main Features:  
   
@@ -32,8 +37,9 @@ Main Features:
 ✅ Recent notification highlight separating them from old notifications.  
 ✅ Edit profile option to update social links, bio and username  
 ✅ Also user can change login password from settings.  
-✅ Its mobile responsive with modern design + fade in animation on pages. And much more.  
-✅ dark mode
+✅ Its mobile responsive with modern design + fade in animation on pages.  
+✅ dark mode   
+✅ reset password
 
 
 
