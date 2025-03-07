@@ -49,7 +49,7 @@ const generateUploadURL = async () => {
   const imageName = `${nanoid()}-${data.getTime()}.jpeg`;
 
   return await s3.getSignedUrlPromise("putObject", {
-    Bucket: "mern-blog-web",
+    Bucket: "mern-blogger",
     Key: imageName,
     Expires: 1000,
     ContentType: "image/jpeg",
@@ -220,7 +220,7 @@ server.post("/forgot-password", (req, res) => {
 
     Please click the link below to reset your password, And the link will expire in 10 minutes
     
-    https://www.leafblog.site/reset-password/${user._id}/${token}
+    https://leafblog-client.onrender.com/reset-password/${user._id}/${token}
     
     If you didn't make this request, you can safely ignore this email and carry on as usual.`,
       };
