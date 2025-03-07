@@ -228,7 +228,7 @@ server.post("/forgot-password", (req, res) => {
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
           return res.status(500).json({
-            error: err.message,
+            error: error.message,
           });
         }
       });
