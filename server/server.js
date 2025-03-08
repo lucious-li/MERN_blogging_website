@@ -184,8 +184,43 @@ server.post("/signin", (req, res) => {
     });
 });
 
+const resetRequestData = new Map();
+
 server.post("/forgot-password", (req, res) => {
   let { email } = req.body;
+
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  let requestData = resetRequestData.get(email);
+  if (!requestData) {
+    requestData = {
+      lastRequest: 0,
+      count: 0,
+      date: currentDate,
+    };
+    resetRequestData.set(email, requestData);
+  } else {
+    if (requestData.date !== currentDate) {
+      requestData.count = 0;
+      requestData.date = currentDate;
+    }
+  }
+
+  if (Date.now() - requestData.lastRequest < 60 * 1000) {
+    return res.status(429).json({ error: "please wait 1 min to try again" });
+  }
+
+  // Check the maximum number of requests per day (set to 3 times here)
+  if (requestData.count >= 3) {
+    return res.status(429).json({
+      error:
+        "The number of password reset requests has reached the limit today, please try again tomorrow.",
+    });
+  }
+  // Update the count and lastRequest timestamp
+  requestData.count += 1;
+  requestData.lastRequest = Date.now();
+
   User.findOne({ "personal_info.email": email })
     .then((user) => {
       if (!user) {
@@ -200,10 +235,10 @@ server.post("/forgot-password", (req, res) => {
       }
 
       var transporter = nodemailer.createTransport({
-        service: "outlook",
+        service: "gmail",
         auth: {
-          user: process.env.OUTLOOK_ACCOUNT,
-          pass: process.env.OUTLOOK_PASSWORD,
+          user: process.env.GMAIL_ACCOUNT,
+          pass: process.env.GMAIL_PASSWORD,
         },
       });
 
@@ -213,7 +248,7 @@ server.post("/forgot-password", (req, res) => {
       });
 
       var mailOptions = {
-        from: process.env.OUTLOOK_ACCOUNT,
+        from: process.env.GMAIL_ACCOUNT,
         to: email,
         subject: "LeafBlog Password Reset",
         text: `Hi ${user.personal_info.username},
@@ -241,6 +276,7 @@ server.post("/forgot-password", (req, res) => {
         error: err.message,
       });
     });
+  // res.status(200).json({ success: "Password reset email sent!" });
 });
 
 server.post("/reset-password", verifyJWT, (req, res) => {

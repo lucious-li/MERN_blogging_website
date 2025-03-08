@@ -8,18 +8,28 @@ import { storeInSession } from "../common/session";
 import { useContext } from "react";
 import { UserContext } from "../App";
 import { authWithGoogle } from "../common/firebase";
+import { useState, useEffect } from "react";
 
 const UserAuthForm = ({ type }) => {
-  let isSubmitDisabled = false;
   let {
     userAuth: { access_token },
     setUserAuth,
   } = useContext(UserContext);
 
+  const [resetButtonDisabled, setResetButtonDisabled] = useState(false);
+  const [resetButtonText, setResetButtonText] = useState("Send");
+
   const userAuthThroughServer = (serverRoute, formData) => {
     let loadingToast;
 
-    if (serverRoute == "/forgot-password") {
+    let sendCount = localStorage.getItem("sendCount") || 0;
+
+    if (sendCount >= 3) {
+      setResetButtonDisabled(true);
+      return toast.error(
+        "You have exceeded the maximum number of requests. Please try again tomorrow."
+      );
+    } else if (serverRoute === "/forgot-password") {
       loadingToast = toast.loading("Sending....");
     }
 
@@ -29,6 +39,8 @@ const UserAuthForm = ({ type }) => {
         if (serverRoute == "/forgot-password") {
           toast.dismiss(loadingToast);
           toast.success("sent successfully! ✅");
+          sendCount++;
+          localStorage.setItem("sendCount", sendCount);
         } else {
           storeInSession("user", JSON.stringify(data));
           setUserAuth(data);
@@ -43,8 +55,24 @@ const UserAuthForm = ({ type }) => {
     e.preventDefault();
     e.target.setAttribute("disabled", true);
 
-    if (isSubmitDisabled && type == "/forgot-password") {
-      return toast.error("Please wait... You can submit again in 10 seconds");
+    // If it's forget-Password, start a 1-minute countdown (to prevent repeated clicks)
+    if (type === "forgot-password") {
+      setResetButtonDisabled(true);
+      let timeLeft = 60;
+      const countdown = setInterval(() => {
+        setResetButtonText(`Please wait ${timeLeft}s`);
+        timeLeft--;
+        if (timeLeft < 0) {
+          clearInterval(countdown);
+          setResetButtonText("Send");
+          setResetButtonDisabled(false);
+        }
+      }, 1000);
+    } else {
+      e.target.setAttribute("disabled", true);
+      setTimeout(() => {
+        e.target.removeAttribute("disabled");
+      }, 10000);
     }
 
     let serverRoute =
@@ -83,15 +111,11 @@ const UserAuthForm = ({ type }) => {
     if (password) {
       if (!passwordRegex.test(password)) {
         return toast.error(
-          "password should to be 6 to 20 characters long with numeric, 1 lowercase and 1 uppercase lettes"
+          "password should to be 6 to 20 characters long with numeric, 1 lowercase and 1 uppercase letters"
         );
       }
     }
     userAuthThroughServer(serverRoute, formData);
-
-    setTimeout(() => {
-      e.target.removeAttribute("disabled");
-    }, 10000);
   };
 
   const handleGoogleAuth = (e) => {
@@ -171,8 +195,13 @@ const UserAuthForm = ({ type }) => {
               className="btn-dark center mt-14"
               type="submit"
               onClick={handleSubmit}
+              disabled={
+                type === "forgot-password" ? resetButtonDisabled : false
+              }
             >
-              {type == "forgot-password" ? "Send" : type.replace("-", " ")}
+              {type == "forgot-password"
+                ? resetButtonText
+                : type.replace("-", " ")}
             </button>
 
             {type != "forgot-password" ? (
